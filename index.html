@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service Report System</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f2f5;
+            color: #333;
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            background: linear-gradient(135deg, #1a237e, #283593);
+            color: white;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .top-nav h1 {
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.3s;
+        }
+
+        .btn-new {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-new:hover {
+            background: #388E3C;
+            transform: translateY(-1px);
+        }
+
+        .btn-save {
+            background: #2196F3;
+            color: white;
+        }
+
+        .btn-save:hover {
+            background: #1565C0;
+            transform: translateY(-1px);
+        }
+
+        .btn-pdf {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-pdf:hover {
+            background: #c62828;
+            transform: translateY(-1px);
+        }
+
+        .btn-list {
+            background: #FF9800;
+            color: white;
+        }
+
+        .btn-list:hover {
+            background: #e65100;
+            transform: translateY(-1px);
+        }
+
+        /* Main Container */
+        .main-container {
+            max-width: 900px;
+            margin: 20px auto;
+            padding: 0 15px;
+        }
+
+        /* Service Report Form */
+        .report-page {
+            background: white;
+            padding: 40px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            border-radius: 4px;
+        }
+
+        /* Header */
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+        }
+
+        .report-title {
+            border: 3px solid #333;
+            padding: 10px 40px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .doc-number-section {
+            text-align: right;
+        }
+
+        .doc-number-label {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .doc-number {
+            font-size: 22px;
+            font-weight: bold;
+            color: #d32f2f;
+            letter-spacing: 3px;
+            font-family: 'Courier New', monospace;
+            background: #fff3e0;
+            padding: 5px 15px;
+            border: 2px solid #d32f2f;
+            border-radius: 4px;
+        }
+
+        /* Form Sections */
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .form-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            font-size: 13px;
+            white-space: nowrap;
+            min-width: fit-content;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="date"],
+        .form-group input[type="time"],
+        .form-group input[type="number"] {
+            flex: 1;
+            padding: 6px 10px;
+            border: none;
+            border-bottom: 1.5px solid #999;
+            font-size: 13px;
+            outline: none;
+            background: transparent;
+            min-width: 80px;
+        }
+
+        .form-group input:focus {
+            border-bottom-color: #1a237e;
+            border-bottom-width: 2px;
+        }
+
+        .form-group textarea {
+            flex: 1;
+            padding: 8px 10px;
+            border: 1px solid #ccc;
+            font-size: 13px;
+            outline: none;
+            resize: vertical;
+            font-family: inherit;
+            border-radius: 3px;
+            min-height: 80px;
+        }
+
+        .form-group textarea:focus {
+            border-color: #1a237e;
+        }
+
+        /* Divider */
+        .divider {
+            border: none;
+            border-top: 2px dashed #999;
+            margin: 15px 0;
+        }
+
+        /* Section Label */
+        .section-label {
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 5px;
+            margin-top: 10px;
+            color: #1a237e;
+        }
+
+        /* Radio/Checkbox Groups */
+        .radio-group {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .radio-group label {
+            font-weight: 600;
+            font-size: 13px;
+            margin-right: 5px;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .radio-item input[type="radio"],
+        .radio-item input[type="checkbox"] {
+            cursor: pointer;
+            accent-color: #1a237e;
+        }
+
+        /* Tables */
+        .parts-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            font-size: 13px;
+        }
+
+        .parts-table th,
+        .parts-table td {
+            border: 1.5px solid #333;
+            padding: 6px 8px;
+            text-align: left;
+        }
+
+        .parts-table th {
+            background: #f5f5f5;
+            font-weight: 700;
+            font-size: 12px;
+        }
+
+        .parts-table input {
+            width: 100%;
+            border: none;
+            outline: none;
+            font-size: 12px;
+            padding: 2px;
+            background: transparent;
+        }
+
+        /* Bottom Section */
+        .bottom-section {
+            display: flex;
+            gap: 0;
+            margin-top: 10px;
+        }
+
+        .charge-table {
+            border-collapse: collapse;
+            font-size: 13px;
+            flex: 0 0 auto;
+        }
+
+        .charge-table th,
+        .charge-table td {
+            border: 1.5px solid #333;
+            padding: 6px 10px;
+            text-align: left;
+        }
+
+        .charge-table th {
+            background: #f5f5f5;
+            font-weight: 700;
+        }
+
+        .charge-table input {
+            width: 100%;
+            border: none;
+            outline: none;
+            font-size: 12px;
+            padding: 2px;
+            background: transparent;
+        }
+
+        /* Signature Section */
+        .signature-section {
+            display: flex;
+            gap: 0;
+            flex: 1;
+        }
+
+        .signature-box {
+            flex: 1;
+            border: 1.5px solid #333;
+            padding: 8px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            min-height: 120px;
+        }
+
+        .signature-box .sig-label {
+            font-weight: 700;
+            font-size: 12px;
+            margin-bottom: 5px;
+            background: #f5f5f5;
+            padding: 3px;
+            margin: -8px -8px 5px -8px;
+            border-bottom: 1.5px solid #333;
+        }
+
+        .sig-canvas-wrap {
+            flex: 1;
+            position: relative;
+            cursor: crosshair;
+            min-height: 60px;
+        }
+
+        .sig-canvas {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-radius: 2px;
+        }
+
+        .sig-name-input {
+            border: none;
+            border-top: 1px solid #999;
+            text-align: center;
+            font-size: 12px;
+            padding: 3px;
+            outline: none;
+            margin-top: 5px;
+            width: 100%;
+        }
+
+        .sig-label-bottom {
+            font-size: 11px;
+            color: #666;
+            margin-top: 2px;
+        }
+
+        .clear-sig {
+            font-size: 10px;
+            color: #f44336;
+            cursor: pointer;
+            text-decoration: underline;
+            margin-top: 3px;
+        }
+
+        .clear-sig:hover {
+            color: #b71c1c;
+        }
+
+        /* Full-width textarea groups */
+        .full-width-group {
+            margin-bottom: 12px;
+        }
+
+        .full-width-group label {
+            font-weight: 600;
+            font-size: 13px;
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .full-width-group textarea {
+            width: 100%;
+            padding: 8px 10px;
+            border: 1px solid #ccc;
+            font-size: 13px;
+            outline: none;
+            resize: vertical;
+            font-family: inherit;
+            border-radius: 3px;
+        }
+
+        .full-width-group textarea:focus {
+            border-color: #1a237e;
+        }
+
+        /* Document List Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 50px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h2 {
+            color: #1a237e;
+        }
+
+        .modal-close {
+            background: #f44336;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .doc-list-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .doc-list-table th,
+        .doc-list-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        .doc-list-table th {
+            background: #1a237e;
+            color: white;
+        }
+
+        .doc-list-table tr:nth-child(even) {
+            background: #f5f5f5;
+        }
+
+        .doc-list-table tr:hover {
+            background: #e3f2fd;
+        }
+
+        .btn-load {
+            background: #2196F3;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .btn-delete {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-left: 5px;
+        }
+
+        .no-docs {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            font-size: 16px;
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            z-index: 3000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+
+        .toast-success {
+            background: #4CAF50;
+        }
+
+        .toast-error {
+            background: #f44336;
+        }
+
+        .toast-info {
+            background: #2196F3;
+        }
+
+        /* Status Badge */
+        .status-badge {
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            display: inline-block;
+        }
+
+        .status-close {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .status-pending {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .report-page {
+                padding: 20px 15px;
+            }
+
+            .report-header {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .form-row {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .form-group {
+                min-width: 100%;
+            }
+
+            .radio-group {
+                gap: 8px;
+            }
+
+            .bottom-section {
+                flex-direction: column;
+            }
+
+            .nav-buttons {
+                flex-wrap: wrap;
+                gap: 5px;
+            }
+
+            .nav-btn {
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+
+            .top-nav {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .top-nav h1 {
+                font-size: 18px;
+            }
+
+            .signature-section {
+                flex-direction: column;
+            }
+        }
+
+        @media print {
+            .top-nav, .nav-buttons, .clear-sig, .modal-overlay, .toast {
+                display: none !important;
+            }
+            .main-container {
+                margin: 0;
+                padding: 0;
+            }
+            .report-page {
+                box-shadow: none;
+                padding: 20px;
+            }
+        }
+
+        /* Company Logo Area */
+        .company-logo {
+            font-size: 11px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Navigation -->
+    <div class="top-nav" id="topNav">
+        <h1>🔧 Service Report System</h1>
+        <div class="nav-buttons">
+            <button class="nav-btn btn-new" onclick="newReport()">📄 New</button>
+            <button class="nav-btn btn-save" onclick="saveReport()">💾 Save</button>
+            <button class="nav-btn btn-pdf" onclick="exportPDF()">📥 PDF</button>
+            <button class="nav-btn btn-list" onclick="showDocList()">📋 List</button>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="report-page" id="reportPage">
+
+            <!-- Header -->
+            <div class="report-header">
+                <div>
+                    <div class="company-logo">[Your Company Logo]</div>
+                    <div class="report-title">Service Report</div>
+                </div>
+                <div class="doc-number-section">
+                    <div class="doc-number-label">No.</div>
+                    <div class="doc-number" id="docNumber">-NEW-</div>
+                </div>
+            </div>
+
+            <!-- Customer Info -->
+            <div class="form-row">
+                <div class="form-group" style="flex:2">
+                    <label>Customer Name</label>
+                    <input type="text" id="customerName">
+                </div>
+                <div class="form-group">
+                    <label>Project No.</label>
+                    <input type="text" id="projectNo">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group" style="flex:2">
+                    <label>Address</label>
+                    <input type="text" id="address">
+                </div>
+                <div class="form-group">
+                    <label>Tel.</label>
+                    <input type="text" id="tel">
+                </div>
+            </div>
+
+            <!-- Service Type -->
+            <div class="radio-group">
+                <label class="radio-item"><input type="radio" name="serviceType" value="Warranty"> Warranty</label>
+                <label class="radio-item"><input type="radio" name="serviceType" value="MA Control"> MA Control</label>
+                <label class="radio-item"><input type="radio" name="serviceType" value="Per Call"> Per Call</label>
+                <label class="radio-item"><input type="radio" name="serviceType" value="Demo"> Demo</label>
+                <label class="radio-item"><input type="radio" name="serviceType" value="Other"> Other</label>
+                <input type="text" id="serviceTypeOther" style="border:none;border-bottom:1px solid #999;width:100px;font-size:13px;outline:none;">
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Request Date</label>
+                    <input type="date" id="requestDate">
+                </div>
+                <div class="form-group">
+                    <label>Time</label>
+                    <input type="time" id="requestTime">
+                </div>
+            </div>
+
+            <hr class="divider">
+
+            <!-- Problem Type -->
+            <div class="radio-group">
+                <label class="radio-item"><input type="radio" name="problemType" value="H/W Problem"> H/W Problem</label>
+                <label class="radio-item"><input type="radio" name="problemType" value="S/W Problem"> S/W Problem</label>
+                <label class="radio-item"><input type="radio" name="problemType" value="Install"> Install</label>
+                <label class="radio-item"><input type="radio" name="problemType" value="PM"> PM</label>
+                <label class="radio-item"><input type="radio" name="problemType" value="Other"> Other</label>
+                <input type="text" id="problemTypeOther" style="border:none;border-bottom:1px solid #999;width:100px;font-size:13px;outline:none;">
+            </div>
+
+            <!-- Severity Level -->
+            <div class="radio-group">
+                <label style="font-weight:700;">Severity Level</label>
+                <label class="radio-item"><input type="radio" name="severity" value="Critical"> Critical</label>
+                <label class="radio-item"><input type="radio" name="severity" value="Significant"> Significant</label>
+                <label class="radio-item"><input type="radio" name="severity" value="Not critical"> Not critical</label>
+                <span style="margin-left:15px;font-weight:700;">Type</span>
+                <label class="radio-item"><input type="radio" name="locationType" value="Remote"> Remote</label>
+                <label class="radio-item"><input type="radio" name="locationType" value="On-site"> On-site</label>
+            </div>
+
+            <!-- Product Info -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Product</label>
+                    <input type="text" id="product">
+                </div>
+                <div class="form-group">
+                    <label>Model</label>
+                    <input type="text" id="model">
+                </div>
+                <div class="form-group" style="flex:0.7">
+                    <label>S/N</label>
+                    <input type="text" id="serialNo">
+                </div>
+            </div>
+
+            <!-- Subject -->
+            <div class="full-width-group">
+                <label>Subject</label>
+                <textarea id="subject" rows="4" placeholder="อธิบายปัญหาที่พบ..."></textarea>
+            </div>
+
+            <!-- Action -->
+            <div class="full-width-group">
+                <label>Action</label>
+                <textarea id="action" rows="7" placeholder="รายละเอียดการดำเนินการแก้ไข..."></textarea>
+            </div>
+
+            <!-- Remark -->
+            <div class="full-width-group">
+                <label>Remark</label>
+                <textarea id="remark" rows="3" placeholder="หมายเหตุเพิ่มเติม..."></textarea>
+            </div>
+
+            <!-- Service Time -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Service Date</label>
+                    <input type="date" id="serviceDate">
+                </div>
+                <div class="form-group">
+                    <label>Start Time</label>
+                    <input type="time" id="startTime">
+                </div>
+                <div class="form-group">
+                    <label>Finish Time</label>
+                    <input type="time" id="finishTime">
+                </div>
+                <div class="form-group">
+                    <label>Total Time</label>
+                    <input type="text" id="totalTime" readonly style="background:#f5f5f5;">
+                </div>
+            </div>
+
+            <!-- Status -->
+            <div class="radio-group">
+                <label style="font-weight:700;">Status</label>
+                <label class="radio-item"><input type="radio" name="status" value="Close"> Close</label>
+                <label class="radio-item"><input type="radio" name="status" value="Pending" checked> Pending</label>
+            </div>
+
+            <!-- Parts Table -->
+            <table class="parts-table">
+                <thead>
+                    <tr>
+                        <th style="width:15%"></th>
+                        <th style="width:25%">Part No</th>
+                        <th style="width:35%">Description</th>
+                        <th style="width:10%">Qty</th>
+                        <th style="width:15%">S/N</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="font-weight:600;">Spare Usage</td>
+                        <td><input type="text" id="sparePartNo"></td>
+                        <td><input type="text" id="spareDesc"></td>
+                        <td><input type="text" id="spareQty"></td>
+                        <td><input type="text" id="spareSN"></td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:600;">Defective Part</td>
+                        <td><input type="text" id="defPartNo"></td>
+                        <td><input type="text" id="defDesc"></td>
+                        <td><input type="text" id="defQty"></td>
+                        <td><input type="text" id="defSN"></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Bottom Section: Charges + Signatures -->
+            <div class="bottom-section">
+                <!-- Charge Table -->
+                <table class="charge-table">
+                    <tr>
+                        <td style="font-weight:600;">Service Charge</td>
+                        <td><input type="text" id="serviceCharge" style="width:120px;"></td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:600;">Travelling Charge</td>
+                        <td><input type="text" id="travelCharge" style="width:120px;"></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight:700;">Total</td>
+                        <td><input type="text" id="totalCharge" readonly style="width:120px;font-weight:700;background:#f5f5f5;"></td>
+                    </tr>
+                </table>
+
+                <!-- Signatures -->
+                <div class="signature-section">
+                    <!-- Serviced By -->
+                    <div class="signature-box">
+                        <div class="sig-label">Serviced By :</div>
+                        <div class="sig-canvas-wrap">
+                            <canvas class="sig-canvas" id="sigService"></canvas>
+                        </div>
+                        <input type="text" class="sig-name-input" id="servicedByName" placeholder="( ชื่อ-สกุล )">
+                        <div class="sig-label-bottom">Signature</div>
+                        <span class="clear-sig" onclick="clearSignature('sigService')">ล้างลายเซ็น</span>
+                    </div>
+
+                    <!-- Customer By -->
+                    <div class="signature-box">
+                        <div class="sig-label">Customer By :</div>
+                        <div class="sig-canvas-wrap">
+                            <canvas class="sig-canvas" id="sigCustomer"></canvas>
+                        </div>
+                        <input type="text" class="sig-name-input" id="customerByName" placeholder="( ชื่อ-สกุล )">
+                        <div class="sig-label-bottom">Signature</div>
+                        <span class="clear-sig" onclick="clearSignature('sigCustomer')">ล้างลายเซ็น</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Document List Modal -->
+    <div class="modal-overlay" id="docListModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📋 รายการ Service Report</h2>
+                <button class="modal-close" onclick="closeDocList()">✕</button>
+            </div>
+            <div id="docListContent"></div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <script>
+        // ============ Signature Pad Logic ============
+        class SignaturePad {
+            constructor(canvasId) {
+                this.canvas = document.getElementById(canvasId);
+                this.ctx = this.canvas.getContext('2d');
+                this.drawing = false;
+                this.lastX = 0;
+                this.lastY = 0;
+
+                this.resizeCanvas();
+                window.addEventListener('resize', () => this.resizeCanvas());
+
+                // Mouse events
+                this.canvas.addEventListener('mousedown', (e) => this.startDrawing(e));
+                this.canvas.addEventListener('mousemove', (e) => this.draw(e));
+                this.canvas.addEventListener('mouseup', () => this.stopDrawing());
+                this.canvas.addEventListener('mouseout', () => this.stopDrawing());
+
+                // Touch events
+                this.canvas.addEventListener('touchstart', (e) => this.startDrawingTouch(e));
+                this.canvas.addEventListener('touchmove', (e) => this.drawTouch(e));
+                this.canvas.addEventListener('touchend', () => this.stopDrawing());
+            }
+
+            resizeCanvas() {
+                const wrapper = this.canvas.parentElement;
+                const data = this.canvas.toDataURL();
+                this.canvas.width = wrapper.offsetWidth;
+                this.canvas.height = wrapper.offsetHeight;
+                if (data && data !== 'data:,') {
+                    const img = new Image();
+                    img.onload = () => {
+                        this.ctx.drawImage(img, 0, 0);
+                    };
+                    img.src = data;
+                }
+                this.ctx.strokeStyle = '#000';
+                this.ctx.lineWidth = 2;
+                this.ctx.lineCap = 'round';
+                this.ctx.lineJoin = 'round';
+            }
+
+            getPos(e) {
+                const rect = this.canvas.getBoundingClientRect();
+                return {
+                    x: e.clientX - rect.left,
+                    y: e.clientY - rect.top
+                };
+            }
+
+            startDrawing(e) {
+                this.drawing = true;
+                const pos = this.getPos(e);
+                this.lastX = pos.x;
+                this.lastY = pos.y;
+            }
+
+            draw(e) {
+                if (!this.drawing) return;
+                const pos = this.getPos(e);
+                this.ctx.beginPath();
+                this.ctx.moveTo(this.lastX, this.lastY);
+                this.ctx.lineTo(pos.x, pos.y);
+                this.ctx.stroke();
+                this.lastX = pos.x;
+                this.lastY = pos.y;
+            }
+
+            startDrawingTouch(e) {
+                e.preventDefault();
+                const touch = e.touches[0];
+                const rect = this.canvas.getBoundingClientRect();
+                this.drawing = true;
+                this.lastX = touch.clientX - rect.left;
+                this.lastY = touch.clientY - rect.top;
+            }
+
+            drawTouch(e) {
+                if (!this.drawing) return;
+                e.preventDefault();
+                const touch = e.touches[0];
+                const rect = this.canvas.getBoundingClientRect();
+                const x = touch.clientX - rect.left;
+                const y = touch.clientY - rect.top;
+                this.ctx.beginPath();
+                this.ctx.moveTo(this.lastX, this.lastY);
+                this.ctx.lineTo(x, y);
+                this.ctx.stroke();
+                this.lastX = x;
+                this.lastY = y;
+            }
+
+            stopDrawing() {
+                this.drawing = false;
+            }
+
+            clear() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            }
+
+            getData() {
+                return this.canvas.toDataURL();
+            }
+
+            loadData(data) {
+                if (!data) return;
+                const img = new Image();
+                img.onload = () => {
+                    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                    this.ctx.drawImage(img, 0, 0);
+                };
+                img.src = data;
+            }
+
+            isEmpty() {
+                const blank = document.createElement('canvas');
+                blank.width = this.canvas.width;
+                blank.height = this.canvas.height;
+                return this.canvas.toDataURL() === blank.toDataURL();
+            }
+        }
+
+        // Initialize Signature Pads
+        let sigServicePad, sigCustomerPad;
+
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                sigServicePad = new SignaturePad('sigService');
+                sigCustomerPad = new SignaturePad('sigCustomer');
+            }, 100);
+        });
+
+        function clearSignature(canvasId) {
+            if (canvasId === 'sigService') sigServicePad.clear();
+            if (canvasId === 'sigCustomer') sigCustomerPad.clear();
+        }
+
+        // ============ Auto Calculate ============
+        document.getElementById('startTime').addEventListener('change', calcTotalTime);
+        document.getElementById('finishTime').addEventListener('change', calcTotalTime);
+
+        function calcTotalTime() {
+            const start = document.getElementById('startTime').value;
+            const finish = document.getElementById('finishTime').value;
+            if (start && finish) {
+                const s = start.split(':').map(Number);
+                const f = finish.split(':').map(Number);
+                let mins = (f[0]*60+f[1]) - (s[0]*60+s[1]);
+                if (mins < 0) mins += 1440;
+                const hrs = Math.floor(mins/60);
+                const m = mins % 60;
+                document.getElementById('totalTime').value = hrs + ' Hrs ' + m + ' Min';
+            }
+        }
+
+        document.getElementById('serviceCharge').addEventListener('input', calcTotal);
+        document.getElementById('travelCharge').addEventListener('input', calcTotal);
+
+        function calcTotal() {
+            const sc = parseFloat(document.getElementById('serviceCharge').value) || 0;
+            const tc = parseFloat(document.getElementById('travelCharge').value) || 0;
+            document.getElementById('totalCharge').value = (sc + tc).toLocaleString();
+        }
+
+        // ============ Document Number Generator ============
+        function generateDocNumber() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth()+1).padStart(2,'0');
+            const prefix = `SR-${year}${month}-`;
+
+            let docs = JSON.parse(localStorage.getItem('serviceReports') || '[]');
+            let maxNum = 0;
+
+            docs.forEach(doc => {
+                if (doc.docNumber && doc.docNumber.startsWith(prefix)) {
+                    const num = parseInt(doc.docNumber.replace(prefix, ''));
+                    if (num > maxNum) maxNum = num;
+                }
+            });
+
+            return prefix + String(maxNum + 1).padStart(4, '0');
+        }
+
+        // ============ Get Radio Value ============
+        function getRadioValue(name) {
+            const el = document.querySelector(`input[name="${name}"]:checked`);
+            return el ? el.value : '';
+        }
+
+        function setRadioValue(name, value) {
+            if (!value) return;
+            const el = document.querySelector(`input[name="${name}"][value="${value}"]`);
+            if (el) el.checked = true;
+        }
+
+        // ============ Collect Form Data ============
+        function collectFormData() {
+            return {
+                docNumber: document.getElementById('docNumber').textContent,
+                customerName: document.getElementById('customerName').value,
+                projectNo: document.getElementById('projectNo').value,
+                address: document.getElementById('address').value,
+                tel: document.getElementById('tel').value,
+                serviceType: getRadioValue('serviceType'),
+                serviceTypeOther: document.getElementById('serviceTypeOther').value,
+                requestDate: document.getElementById('requestDate').value,
+                requestTime: document.getElementById('requestTime').value,
+                problemType: getRadioValue('problemType'),
+                problemTypeOther: document.getElementById('problemTypeOther').value,
+                severity: getRadioValue('severity'),
+                locationType: getRadioValue('locationType'),
+                product: document.getElementById('product').value,
+                model: document.getElementById('model').value,
+                serialNo: document.getElementById('serialNo').value,
+                subject: document.getElementById('subject').value,
+                action: document.getElementById('action').value,
+                remark: document.getElementById('remark').value,
+                serviceDate: document.getElementById('serviceDate').value,
+                startTime: document.getElementById('startTime').value,
+                finishTime: document.getElementById('finishTime').value,
+                totalTime: document.getElementById('totalTime').value,
+                status: getRadioValue('status'),
+                sparePartNo: document.getElementById('sparePartNo').value,
+                spareDesc: document.getElementById('spareDesc').value,
+                spareQty: document.getElementById('spareQty').value,
+                spareSN: document.getElementById('spareSN').value,
+                defPartNo: document.getElementById('defPartNo').value,
+                defDesc: document.getElementById('defDesc').value,
+                defQty: document.getElementById('defQty').value,
+                defSN: document.getElementById('defSN').value,
+                serviceCharge: document.getElementById('serviceCharge').value,
+                travelCharge: document.getElementById('travelCharge').value,
+                totalCharge: document.getElementById('totalCharge').value,
+                servicedByName: document.getElementById('servicedByName').value,
+                customerByName: document.getElementById('customerByName').value,
+                sigServiceData: sigServicePad ? sigServicePad.getData() : '',
+                sigCustomerData: sigCustomerPad ? sigCustomerPad.getData() : '',
+                savedAt: new Date().toISOString()
+            };
+        }
+
+        // ============ Load Form Data ============
+        function loadFormData(data) {
+            document.getElementById('docNumber').textContent = data.docNumber || '-NEW-';
+            document.getElementById('customerName').value = data.customerName || '';
+            document.getElementById('projectNo').value = data.projectNo || '';
+            document.getElementById('address').value = data.address || '';
+            document.getElementById('tel').value = data.tel || '';
+            setRadioValue('serviceType', data.serviceType);
+            document.getElementById('serviceTypeOther').value = data.serviceTypeOther || '';
+            document.getElementById('requestDate').value = data.requestDate || '';
+            document.getElementById('requestTime').value = data.requestTime || '';
+            setRadioValue('problemType', data.problemType);
+            document.getElementById('problemTypeOther').value = data.problemTypeOther || '';
+            setRadioValue('severity', data.severity);
+            setRadioValue('locationType', data.locationType);
+            document.getElementById('product').value = data.product || '';
+            document.getElementById('model').value = data.model || '';
+            document.getElementById('serialNo').value = data.serialNo || '';
+            document.getElementById('subject').value = data.subject || '';
+            document.getElementById('action').value = data.action || '';
+            document.getElementById('remark').value = data.remark || '';
+            document.getElementById('serviceDate').value = data.serviceDate || '';
+            document.getElementById('startTime').value = data.startTime || '';
+            document.getElementById('finishTime').value = data.finishTime || '';
+            document.getElementById('totalTime').value = data.totalTime || '';
+            setRadioValue('status', data.status);
+            document.getElementById('sparePartNo').value = data.sparePartNo || '';
+            document.getElementById('spareDesc').value = data.spareDesc || '';
+            document.getElementById('spareQty').value = data.spareQty || '';
+            document.getElementById('spareSN').value = data.spareSN || '';
+            document.getElementById('defPartNo').value = data.defPartNo || '';
+            document.getElementById('defDesc').value = data.defDesc || '';
+            document.getElementById('defQty').value = data.defQty || '';
+            document.getElementById('defSN').value = data.defSN || '';
+            document.getElementById('serviceCharge').value = data.serviceCharge || '';
+            document.getElementById('travelCharge').value = data.travelCharge || '';
+            document.getElementById('totalCharge').value = data.totalCharge || '';
+            document.getElementById('servicedByName').value = data.servicedByName || '';
+            document.getElementById('customerByName').value = data.customerByName || '';
+
+            if (data.sigServiceData && sigServicePad) {
+                setTimeout(() => sigServicePad.loadData(data.sigServiceData), 200);
+            }
+            if (data.sigCustomerData && sigCustomerPad) {
+                setTimeout(() => sigCustomerPad.loadData(data.sigCustomerData), 200);
+            }
+        }
+
+        // ============ New Report ============
+        function newReport() {
+            if (!confirm('สร้างเอกสารใหม่? ข้อมูลที่ยังไม่ได้บันทึกจะหายไป')) return;
+
+            // Clear all fields
+            document.querySelectorAll('input[type="text"], input[type="date"], input[type="time"], input[type="number"], textarea').forEach(el => {
+                el.value = '';
+            });
+            document.querySelectorAll('input[type="radio"]').forEach(el => {
+                el.checked = false;
+            });
+            document.querySelector('input[name="status"][value="Pending"]').checked = true;
+            document.getElementById('docNumber').textContent = '-NEW-';
+
+            if (sigServicePad) sigServicePad.clear();
+            if (sigCustomerPad) sigCustomerPad.clear();
+
+            // Set today's date
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('requestDate').value = today;
+            document.getElementById('serviceDate').value = today;
+
+            showToast('สร้างเอกสารใหม่แล้ว', 'info');
+        }
+
+        // ============ Save Report ============
+        function saveReport() {
+            let data = collectFormData();
+
+            // Generate doc number if new
+            if (data.docNumber === '-NEW-') {
+                data.docNumber = generateDocNumber();
+                document.getElementById('docNumber').textContent = data.docNumber;
+            }
+
+            // Validate
+            if (!data.customerName.trim()) {
+                showToast('กรุณากรอก Customer Name', 'error');
+                document.getElementById('customerName').focus();
+                return;
+            }
+
+            // Save to localStorage
+            let docs = JSON.parse(localStorage.getItem('serviceReports') || '[]');
+            const existIdx = docs.findIndex(d => d.docNumber === data.docNumber);
+
+            if (existIdx >= 0) {
+                docs[existIdx] = data;
+            } else {
+                docs.push(data);
+            }
+
+            localStorage.setItem('serviceReports', JSON.stringify(docs));
+            showToast(`บันทึกเรียบร้อย: ${data.docNumber}`, 'success');
+        }
+
+        // ============ Export PDF ============
+        async function exportPDF() {
+            const docNum = document.getElementById('docNumber').textContent;
+            if (docNum === '-NEW-') {
+                showToast('กรุณาบันทึกเอกสารก่อน Export PDF', 'error');
+                return;
+            }
+
+            showToast('กำลังสร้าง PDF...', 'info');
+
+            // Hide non-printable elements
+            const clearBtns = document.querySelectorAll('.clear-sig');
+            clearBtns.forEach(btn => btn.style.display = 'none');
+
+            const element = document.getElementById('reportPage');
+
+            try {
+                const canvas = await html2canvas(element, {
+                    scale: 2,
+                    useCORS: true,
+                    backgroundColor: '#ffffff',
+                    logging: false
+                });
+
+                const { jsPDF } = window.jspdf;
+                const pdf = new jsPDF('p', 'mm', 'a4');
+
+                const pageWidth = pdf.internal.pageSize.getWidth();
+                const pageHeight = pdf.internal.pageSize.getHeight();
+                const margin = 10;
+                const contentWidth = pageWidth - (margin * 2);
+
+                const imgWidth = contentWidth;
+                const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+                let yPosition = margin;
+                let remainingHeight = imgHeight;
+                let sourceY = 0;
+
+                const pageContentHeight = pageHeight - (margin * 2);
+
+                if (imgHeight <= pageContentHeight) {
+                    pdf.addImage(canvas.toDataURL('image/png'), 'PNG', margin, margin, imgWidth, imgHeight);
+                } else {
+                    while (remainingHeight > 0) {
+                        if (sourceY > 0) pdf.addPage();
+
+                        const sliceHeight = Math.min(pageContentHeight, remainingHeight);
+                        const sourcePixelY = (sourceY / imgHeight) * canvas.height;
+                        const sourcePixelHeight = (sliceHeight / imgHeight) * canvas.height;
+
+                        const sliceCanvas = document.createElement('canvas');
+                        sliceCanvas.width = canvas.width;
+                        sliceCanvas.height = sourcePixelHeight;
+                        const sliceCtx = sliceCanvas.getContext('2d');
+                        sliceCtx.drawImage(canvas, 0, sourcePixelY, canvas.width, sourcePixelHeight, 0, 0, canvas.width, sourcePixelHeight);
+
+                        pdf.addImage(sliceCanvas.toDataURL('image/png'), 'PNG', margin, margin, imgWidth, sliceHeight);
+
+                        sourceY += sliceHeight;
+                        remainingHeight -= sliceHeight;
+                    }
+                }
+
+                pdf.save(`${docNum}.pdf`);
+                showToast('PDF สร้างเรียบร้อย!', 'success');
+            } catch (error) {
+                showToast('เกิดข้อผิดพลาดในการสร้าง PDF', 'error');
+                console.error(error);
+            }
+
+            // Restore elements
+            clearBtns.forEach(btn => btn.style.display = '');
+        }
+
+        // ============ Document List ============
+        function showDocList() {
+            const docs = JSON.parse(localStorage.getItem('serviceReports') || '[]');
+            const container = document.getElementById('docListContent');
+
+            if (docs.length === 0) {
+                container.innerHTML = '<div class="no-docs">📭 ยังไม่มีเอกสาร<br>กด "New" เพื่อสร้าง Service Report ใหม่</div>';
+            } else {
+                let html = '<table class="doc-list-table"><thead><tr>';
+                html += '<th>เลขที่เอกสาร</th><th>ลูกค้า</th><th>วันที่</th><th>สถานะ</th><th>จัดการ</th>';
+                html += '</tr></thead><tbody>';
+
+                docs.sort((a,b) => b.savedAt.localeCompare(a.savedAt));
+
+                docs.forEach((doc, idx) => {
+                    const statusClass = doc.status === 'Close' ? 'status-close' : 'status-pending';
+                    const savedDate = doc.savedAt ? new Date(doc.savedAt).toLocaleDateString('th-TH') : '-';
+                    html += `<tr>
+                        <td><strong>${doc.docNumber}</strong></td>
+                        <td>${doc.customerName || '-'}</td>
+                        <td>${savedDate}</td>
+                        <td><span class="status-badge ${statusClass}">${doc.status || 'Pending'}</span></td>
+                        <td>
+                            <button class="btn-load" onclick="loadReport('${doc.docNumber}')">📂 เปิด</button>
+                            <button class="btn-delete" onclick="deleteReport('${doc.docNumber}')">🗑️ ลบ</button>
+                        </td>
+                    </tr>`;
+                });
+
+                html += '</tbody></table>';
+                container.innerHTML = html;
+            }
+
+            document.getElementById('docListModal').classList.add('active');
+        }
+
+        function closeDocList() {
+            document.getElementById('docListModal').classList.remove('active');
+        }
+
+        function loadReport(docNumber) {
+            const docs = JSON.parse(localStorage.getItem('serviceReports') || '[]');
+            const doc = docs.find(d => d.docNumber === docNumber);
+            if (doc) {
+                loadFormData(doc);
+                closeDocList();
+                showToast(`โหลดเอกสาร ${docNumber}`, 'success');
+            }
+        }
+
+        function deleteReport(docNumber) {
+            if (!confirm(`ลบเอกสาร ${docNumber}?`)) return;
+            let docs = JSON.parse(localStorage.getItem('serviceReports') || '[]');
+            docs = docs.filter(d => d.docNumber !== docNumber);
+            localStorage.setItem('serviceReports', JSON.stringify(docs));
+            showDocList();
+            showToast(`ลบเอกสาร ${docNumber} แล้ว`, 'info');
+        }
+
+        // ============ Toast ============
+        function showToast(message, type) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast toast-${type} show`;
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // ============ Click outside modal to close ============
+        document.getElementById('docListModal').addEventListener('click', function(e) {
+            if (e.target === this) closeDocList();
+        });
+
+        // ============ Init ============
+        window.addEventListener('load', () => {
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('requestDate').value = today;
+            document.getElementById('serviceDate').value = today;
+        });
+    </script>
+
+</body>
+</html>
