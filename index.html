@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Service Report System</title>
+    <title>Service Report System - MFEC</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
@@ -12,7 +12,6 @@
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: #f0f2f5;
@@ -32,19 +31,16 @@
             top: 0;
             z-index: 1000;
         }
-
         .top-nav h1 {
             font-size: 22px;
             display: flex;
             align-items: center;
             gap: 10px;
         }
-
         .nav-buttons {
             display: flex;
             gap: 10px;
         }
-
         .nav-btn {
             padding: 10px 20px;
             border: none;
@@ -57,46 +53,14 @@
             gap: 6px;
             transition: all 0.3s;
         }
-
-        .btn-new {
-            background: #4CAF50;
-            color: white;
-        }
-
-        .btn-new:hover {
-            background: #388E3C;
-            transform: translateY(-1px);
-        }
-
-        .btn-save {
-            background: #2196F3;
-            color: white;
-        }
-
-        .btn-save:hover {
-            background: #1565C0;
-            transform: translateY(-1px);
-        }
-
-        .btn-pdf {
-            background: #f44336;
-            color: white;
-        }
-
-        .btn-pdf:hover {
-            background: #c62828;
-            transform: translateY(-1px);
-        }
-
-        .btn-list {
-            background: #FF9800;
-            color: white;
-        }
-
-        .btn-list:hover {
-            background: #e65100;
-            transform: translateY(-1px);
-        }
+        .btn-new { background: #4CAF50; color: white; }
+        .btn-new:hover { background: #388E3C; transform: translateY(-1px); }
+        .btn-save { background: #2196F3; color: white; }
+        .btn-save:hover { background: #1565C0; transform: translateY(-1px); }
+        .btn-pdf { background: #f44336; color: white; }
+        .btn-pdf:hover { background: #c62828; transform: translateY(-1px); }
+        .btn-list { background: #FF9800; color: white; }
+        .btn-list:hover { background: #e65100; transform: translateY(-1px); }
 
         /* Main Container */
         .main-container {
@@ -113,42 +77,120 @@
             border-radius: 4px;
         }
 
-        /* Header */
+        /* ============ HEADER LAYOUT ============ */
         .report-header {
             display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
+            align-items: stretch;
             margin-bottom: 20px;
-            padding-bottom: 10px;
+            border: 2px solid #333;
+            min-height: 80px;
         }
 
-        .report-title {
-            border: 3px solid #333;
-            padding: 10px 40px;
-            font-size: 28px;
-            font-weight: bold;
+        /* Left: Logo */
+        .header-logo {
+            flex: 0 0 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 15px;
+            border-right: 2px solid #333;
+        }
+        .header-logo img {
+            max-width: 150px;
+            max-height: 55px;
+            object-fit: contain;
         }
 
-        .doc-number-section {
-            text-align: right;
+        /* Center: Title */
+        .header-title {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 20px;
+            border-right: 2px solid #333;
         }
-
-        .doc-number-label {
-            font-size: 16px;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .doc-number {
-            font-size: 22px;
-            font-weight: bold;
-            color: #d32f2f;
+        .header-title h2 {
+            font-size: 26px;
+            font-weight: 800;
             letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #1a237e;
+        }
+
+        /* Right: No. only */
+        .header-docinfo {
+            flex: 0 0 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 15px;
+        }
+        .doc-row-single {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .doc-label-no {
+            font-weight: 700;
+            font-size: 18px;
+            white-space: nowrap;
+        }
+        .doc-value {
+            font-weight: 700;
+            font-size: 16px;
+            color: #d32f2f;
             font-family: 'Courier New', monospace;
-            background: #fff3e0;
-            padding: 5px 15px;
-            border: 2px solid #d32f2f;
-            border-radius: 4px;
+            letter-spacing: 1px;
+        }
+
+        /* ============ SERVICE TIME ROW (single line) ============ */
+        .service-time-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 12px;
+            align-items: center;
+            flex-wrap: nowrap;
+        }
+        .time-group {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            white-space: nowrap;
+        }
+        .time-group label {
+            font-weight: 600;
+            font-size: 12px;
+            white-space: nowrap;
+        }
+        .time-group input {
+            padding: 5px 6px;
+            border: none;
+            border-bottom: 1.5px solid #999;
+            font-size: 12px;
+            outline: none;
+            background: transparent;
+        }
+        .time-group input:focus {
+            border-bottom-color: #1a237e;
+            border-bottom-width: 2px;
+        }
+        .time-group input[type="date"] {
+            width: 130px;
+        }
+        .time-group input[type="time"] {
+            width: 95px;
+        }
+        .time-group .total-time-display {
+            padding: 5px 10px;
+            border: none;
+            border-bottom: 1.5px solid #999;
+            font-size: 12px;
+            outline: none;
+            background: #f5f5f5;
+            min-width: 100px;
+            color: #1a237e;
+            font-weight: 600;
         }
 
         /* Form Sections */
@@ -159,7 +201,6 @@
             align-items: center;
             flex-wrap: wrap;
         }
-
         .form-group {
             display: flex;
             align-items: center;
@@ -167,14 +208,12 @@
             flex: 1;
             min-width: 200px;
         }
-
         .form-group label {
             font-weight: 600;
             font-size: 13px;
             white-space: nowrap;
             min-width: fit-content;
         }
-
         .form-group input[type="text"],
         .form-group input[type="date"],
         .form-group input[type="time"],
@@ -188,12 +227,10 @@
             background: transparent;
             min-width: 80px;
         }
-
         .form-group input:focus {
             border-bottom-color: #1a237e;
             border-bottom-width: 2px;
         }
-
         .form-group textarea {
             flex: 1;
             padding: 8px 10px;
@@ -205,7 +242,6 @@
             border-radius: 3px;
             min-height: 80px;
         }
-
         .form-group textarea:focus {
             border-color: #1a237e;
         }
@@ -234,13 +270,11 @@
             flex-wrap: wrap;
             margin-bottom: 12px;
         }
-
         .radio-group label {
             font-weight: 600;
             font-size: 13px;
             margin-right: 5px;
         }
-
         .radio-item {
             display: flex;
             align-items: center;
@@ -248,7 +282,6 @@
             font-size: 13px;
             cursor: pointer;
         }
-
         .radio-item input[type="radio"],
         .radio-item input[type="checkbox"] {
             cursor: pointer;
@@ -262,20 +295,17 @@
             margin: 10px 0;
             font-size: 13px;
         }
-
         .parts-table th,
         .parts-table td {
             border: 1.5px solid #333;
             padding: 6px 8px;
             text-align: left;
         }
-
         .parts-table th {
             background: #f5f5f5;
             font-weight: 700;
             font-size: 12px;
         }
-
         .parts-table input {
             width: 100%;
             border: none;
@@ -291,25 +321,21 @@
             gap: 0;
             margin-top: 10px;
         }
-
         .charge-table {
             border-collapse: collapse;
             font-size: 13px;
             flex: 0 0 auto;
         }
-
         .charge-table th,
         .charge-table td {
             border: 1.5px solid #333;
             padding: 6px 10px;
             text-align: left;
         }
-
         .charge-table th {
             background: #f5f5f5;
             font-weight: 700;
         }
-
         .charge-table input {
             width: 100%;
             border: none;
@@ -325,7 +351,6 @@
             gap: 0;
             flex: 1;
         }
-
         .signature-box {
             flex: 1;
             border: 1.5px solid #333;
@@ -335,7 +360,6 @@
             flex-direction: column;
             min-height: 120px;
         }
-
         .signature-box .sig-label {
             font-weight: 700;
             font-size: 12px;
@@ -345,14 +369,12 @@
             margin: -8px -8px 5px -8px;
             border-bottom: 1.5px solid #333;
         }
-
         .sig-canvas-wrap {
             flex: 1;
             position: relative;
             cursor: crosshair;
             min-height: 60px;
         }
-
         .sig-canvas {
             width: 100%;
             height: 100%;
@@ -361,7 +383,6 @@
             left: 0;
             border-radius: 2px;
         }
-
         .sig-name-input {
             border: none;
             border-top: 1px solid #999;
@@ -372,13 +393,11 @@
             margin-top: 5px;
             width: 100%;
         }
-
         .sig-label-bottom {
             font-size: 11px;
             color: #666;
             margin-top: 2px;
         }
-
         .clear-sig {
             font-size: 10px;
             color: #f44336;
@@ -386,7 +405,6 @@
             text-decoration: underline;
             margin-top: 3px;
         }
-
         .clear-sig:hover {
             color: #b71c1c;
         }
@@ -395,14 +413,12 @@
         .full-width-group {
             margin-bottom: 12px;
         }
-
         .full-width-group label {
             font-weight: 600;
             font-size: 13px;
             display: block;
             margin-bottom: 5px;
         }
-
         .full-width-group textarea {
             width: 100%;
             padding: 8px 10px;
@@ -413,7 +429,6 @@
             font-family: inherit;
             border-radius: 3px;
         }
-
         .full-width-group textarea:focus {
             border-color: #1a237e;
         }
@@ -432,11 +447,9 @@
             align-items: flex-start;
             padding-top: 50px;
         }
-
         .modal-overlay.active {
             display: flex;
         }
-
         .modal-content {
             background: white;
             border-radius: 12px;
@@ -447,18 +460,15 @@
             overflow-y: auto;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
         }
-
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
         }
-
         .modal-header h2 {
             color: #1a237e;
         }
-
         .modal-close {
             background: #f44336;
             color: white;
@@ -472,12 +482,10 @@
             align-items: center;
             justify-content: center;
         }
-
         .doc-list-table {
             width: 100%;
             border-collapse: collapse;
         }
-
         .doc-list-table th,
         .doc-list-table td {
             border: 1px solid #ddd;
@@ -485,20 +493,16 @@
             text-align: left;
             font-size: 13px;
         }
-
         .doc-list-table th {
             background: #1a237e;
             color: white;
         }
-
         .doc-list-table tr:nth-child(even) {
             background: #f5f5f5;
         }
-
         .doc-list-table tr:hover {
             background: #e3f2fd;
         }
-
         .btn-load {
             background: #2196F3;
             color: white;
@@ -508,7 +512,6 @@
             cursor: pointer;
             font-size: 12px;
         }
-
         .btn-delete {
             background: #f44336;
             color: white;
@@ -519,7 +522,6 @@
             font-size: 12px;
             margin-left: 5px;
         }
-
         .no-docs {
             text-align: center;
             padding: 40px;
@@ -541,22 +543,12 @@
             transition: transform 0.3s ease;
             box-shadow: 0 5px 20px rgba(0,0,0,0.2);
         }
-
         .toast.show {
             transform: translateX(0);
         }
-
-        .toast-success {
-            background: #4CAF50;
-        }
-
-        .toast-error {
-            background: #f44336;
-        }
-
-        .toast-info {
-            background: #2196F3;
-        }
+        .toast-success { background: #4CAF50; }
+        .toast-error { background: #f44336; }
+        .toast-info { background: #2196F3; }
 
         /* Status Badge */
         .status-badge {
@@ -566,65 +558,62 @@
             font-weight: 700;
             display: inline-block;
         }
-
-        .status-close {
-            background: #e8f5e9;
-            color: #2e7d32;
-        }
-
-        .status-pending {
-            background: #fff3e0;
-            color: #e65100;
-        }
+        .status-close { background: #e8f5e9; color: #2e7d32; }
+        .status-pending { background: #fff3e0; color: #e65100; }
 
         /* Responsive */
         @media (max-width: 768px) {
             .report-page {
                 padding: 20px 15px;
             }
-
             .report-header {
                 flex-direction: column;
-                align-items: center;
-                gap: 10px;
             }
-
+            .header-logo {
+                border-right: none;
+                border-bottom: 2px solid #333;
+                flex: none;
+            }
+            .header-title {
+                border-right: none;
+                border-bottom: 2px solid #333;
+                padding: 10px;
+            }
+            .header-docinfo {
+                flex: none;
+                padding: 10px 15px;
+            }
             .form-row {
                 flex-direction: column;
                 gap: 8px;
             }
-
             .form-group {
                 min-width: 100%;
             }
-
+            .service-time-row {
+                flex-wrap: wrap;
+            }
             .radio-group {
                 gap: 8px;
             }
-
             .bottom-section {
                 flex-direction: column;
             }
-
             .nav-buttons {
                 flex-wrap: wrap;
                 gap: 5px;
             }
-
             .nav-btn {
                 padding: 8px 12px;
                 font-size: 12px;
             }
-
             .top-nav {
                 flex-direction: column;
                 gap: 10px;
             }
-
             .top-nav h1 {
                 font-size: 18px;
             }
-
             .signature-section {
                 flex-direction: column;
             }
@@ -643,20 +632,13 @@
                 padding: 20px;
             }
         }
-
-        /* Company Logo Area */
-        .company-logo {
-            font-size: 11px;
-            color: #666;
-            margin-bottom: 5px;
-        }
     </style>
 </head>
 <body>
 
     <!-- Top Navigation -->
     <div class="top-nav" id="topNav">
-        <h1>🔧 Service Report System</h1>
+        <h1>🔧 MFEC Service Report System</h1>
         <div class="nav-buttons">
             <button class="nav-btn btn-new" onclick="newReport()">📄 New</button>
             <button class="nav-btn btn-save" onclick="saveReport()">💾 Save</button>
@@ -669,15 +651,26 @@
     <div class="main-container">
         <div class="report-page" id="reportPage">
 
-            <!-- Header -->
+            <!-- ============ HEADER ============ -->
             <div class="report-header">
-                <div>
-                    <div class="company-logo">[Your Company Logo]</div>
-                    <div class="report-title">Service Report</div>
+                <!-- Left: MFEC Logo -->
+                <div class="header-logo">
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/MFEC_Logo.png/300px-MFEC_Logo.png" 
+                         alt="MFEC Logo" 
+                         onerror="this.onerror=null; this.parentElement.innerHTML='<div style=\'font-size:32px;font-weight:900;color:#3d4f5f;letter-spacing:2px;\'>MFEC</div>';">
                 </div>
-                <div class="doc-number-section">
-                    <div class="doc-number-label">No.</div>
-                    <div class="doc-number" id="docNumber">-NEW-</div>
+
+                <!-- Center: Title -->
+                <div class="header-title">
+                    <h2>Service Report</h2>
+                </div>
+
+                <!-- Right: No. only -->
+                <div class="header-docinfo">
+                    <div class="doc-row-single">
+                        <span class="doc-label-no">No.</span>
+                        <span class="doc-value" id="docNumber">-NEW-</span>
+                    </div>
                 </div>
             </div>
 
@@ -782,23 +775,23 @@
                 <textarea id="remark" rows="3" placeholder="หมายเหตุเพิ่มเติม..."></textarea>
             </div>
 
-            <!-- Service Time -->
-            <div class="form-row">
-                <div class="form-group">
+            <!-- ============ SERVICE TIME - SINGLE LINE ============ -->
+            <div class="service-time-row">
+                <div class="time-group">
                     <label>Service Date</label>
                     <input type="date" id="serviceDate">
                 </div>
-                <div class="form-group">
+                <div class="time-group">
                     <label>Start Time</label>
                     <input type="time" id="startTime">
                 </div>
-                <div class="form-group">
+                <div class="time-group">
                     <label>Finish Time</label>
                     <input type="time" id="finishTime">
                 </div>
-                <div class="form-group">
+                <div class="time-group">
                     <label>Total Time</label>
-                    <input type="text" id="totalTime" readonly style="background:#f5f5f5;">
+                    <input type="text" id="totalTime" class="total-time-display" readonly>
                 </div>
             </div>
 
@@ -862,7 +855,6 @@
 
                 <!-- Signatures -->
                 <div class="signature-section">
-                    <!-- Serviced By -->
                     <div class="signature-box">
                         <div class="sig-label">Serviced By :</div>
                         <div class="sig-canvas-wrap">
@@ -872,8 +864,6 @@
                         <div class="sig-label-bottom">Signature</div>
                         <span class="clear-sig" onclick="clearSignature('sigService')">ล้างลายเซ็น</span>
                     </div>
-
-                    <!-- Customer By -->
                     <div class="signature-box">
                         <div class="sig-label">Customer By :</div>
                         <div class="sig-canvas-wrap">
@@ -912,22 +902,16 @@
                 this.drawing = false;
                 this.lastX = 0;
                 this.lastY = 0;
-
                 this.resizeCanvas();
                 window.addEventListener('resize', () => this.resizeCanvas());
-
-                // Mouse events
                 this.canvas.addEventListener('mousedown', (e) => this.startDrawing(e));
                 this.canvas.addEventListener('mousemove', (e) => this.draw(e));
                 this.canvas.addEventListener('mouseup', () => this.stopDrawing());
                 this.canvas.addEventListener('mouseout', () => this.stopDrawing());
-
-                // Touch events
                 this.canvas.addEventListener('touchstart', (e) => this.startDrawingTouch(e));
                 this.canvas.addEventListener('touchmove', (e) => this.drawTouch(e));
                 this.canvas.addEventListener('touchend', () => this.stopDrawing());
             }
-
             resizeCanvas() {
                 const wrapper = this.canvas.parentElement;
                 const data = this.canvas.toDataURL();
@@ -935,9 +919,7 @@
                 this.canvas.height = wrapper.offsetHeight;
                 if (data && data !== 'data:,') {
                     const img = new Image();
-                    img.onload = () => {
-                        this.ctx.drawImage(img, 0, 0);
-                    };
+                    img.onload = () => { this.ctx.drawImage(img, 0, 0); };
                     img.src = data;
                 }
                 this.ctx.strokeStyle = '#000';
@@ -945,22 +927,16 @@
                 this.ctx.lineCap = 'round';
                 this.ctx.lineJoin = 'round';
             }
-
             getPos(e) {
                 const rect = this.canvas.getBoundingClientRect();
-                return {
-                    x: e.clientX - rect.left,
-                    y: e.clientY - rect.top
-                };
+                return { x: e.clientX - rect.left, y: e.clientY - rect.top };
             }
-
             startDrawing(e) {
                 this.drawing = true;
                 const pos = this.getPos(e);
                 this.lastX = pos.x;
                 this.lastY = pos.y;
             }
-
             draw(e) {
                 if (!this.drawing) return;
                 const pos = this.getPos(e);
@@ -971,7 +947,6 @@
                 this.lastX = pos.x;
                 this.lastY = pos.y;
             }
-
             startDrawingTouch(e) {
                 e.preventDefault();
                 const touch = e.touches[0];
@@ -980,7 +955,6 @@
                 this.lastX = touch.clientX - rect.left;
                 this.lastY = touch.clientY - rect.top;
             }
-
             drawTouch(e) {
                 if (!this.drawing) return;
                 e.preventDefault();
@@ -995,19 +969,9 @@
                 this.lastX = x;
                 this.lastY = y;
             }
-
-            stopDrawing() {
-                this.drawing = false;
-            }
-
-            clear() {
-                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-            }
-
-            getData() {
-                return this.canvas.toDataURL();
-            }
-
+            stopDrawing() { this.drawing = false; }
+            clear() { this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); }
+            getData() { return this.canvas.toDataURL(); }
             loadData(data) {
                 if (!data) return;
                 const img = new Image();
@@ -1017,7 +981,6 @@
                 };
                 img.src = data;
             }
-
             isEmpty() {
                 const blank = document.createElement('canvas');
                 blank.width = this.canvas.width;
@@ -1026,9 +989,7 @@
             }
         }
 
-        // Initialize Signature Pads
         let sigServicePad, sigCustomerPad;
-
         window.addEventListener('load', () => {
             setTimeout(() => {
                 sigServicePad = new SignaturePad('sigService');
@@ -1051,9 +1012,9 @@
             if (start && finish) {
                 const s = start.split(':').map(Number);
                 const f = finish.split(':').map(Number);
-                let mins = (f[0]*60+f[1]) - (s[0]*60+s[1]);
+                let mins = (f[0] * 60 + f[1]) - (s[0] * 60 + s[1]);
                 if (mins < 0) mins += 1440;
-                const hrs = Math.floor(mins/60);
+                const hrs = Math.floor(mins / 60);
                 const m = mins % 60;
                 document.getElementById('totalTime').value = hrs + ' Hrs ' + m + ' Min';
             }
@@ -1072,31 +1033,27 @@
         function generateDocNumber() {
             const now = new Date();
             const year = now.getFullYear();
-            const month = String(now.getMonth()+1).padStart(2,'0');
-            const prefix = `SR-${year}${month}-`;
-
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const prefix = 'SR-' + year + month + '-';
             let docs = JSON.parse(localStorage.getItem('serviceReports') || '[]');
             let maxNum = 0;
-
-            docs.forEach(doc => {
+            docs.forEach(function(doc) {
                 if (doc.docNumber && doc.docNumber.startsWith(prefix)) {
                     const num = parseInt(doc.docNumber.replace(prefix, ''));
                     if (num > maxNum) maxNum = num;
                 }
             });
-
             return prefix + String(maxNum + 1).padStart(4, '0');
         }
 
-        // ============ Get Radio Value ============
+        // ============ Radio Value Helpers ============
         function getRadioValue(name) {
-            const el = document.querySelector(`input[name="${name}"]:checked`);
+            const el = document.querySelector('input[name="' + name + '"]:checked');
             return el ? el.value : '';
         }
-
         function setRadioValue(name, value) {
             if (!value) return;
-            const el = document.querySelector(`input[name="${name}"][value="${value}"]`);
+            const el = document.querySelector('input[name="' + name + '"][value="' + value + '"]');
             if (el) el.checked = true;
         }
 
@@ -1185,179 +1142,147 @@
             document.getElementById('totalCharge').value = data.totalCharge || '';
             document.getElementById('servicedByName').value = data.servicedByName || '';
             document.getElementById('customerByName').value = data.customerByName || '';
-
             if (data.sigServiceData && sigServicePad) {
-                setTimeout(() => sigServicePad.loadData(data.sigServiceData), 200);
+                setTimeout(function() { sigServicePad.loadData(data.sigServiceData); }, 200);
             }
             if (data.sigCustomerData && sigCustomerPad) {
-                setTimeout(() => sigCustomerPad.loadData(data.sigCustomerData), 200);
+                setTimeout(function() { sigCustomerPad.loadData(data.sigCustomerData); }, 200);
             }
         }
 
         // ============ New Report ============
         function newReport() {
             if (!confirm('สร้างเอกสารใหม่? ข้อมูลที่ยังไม่ได้บันทึกจะหายไป')) return;
-
-            // Clear all fields
-            document.querySelectorAll('input[type="text"], input[type="date"], input[type="time"], input[type="number"], textarea').forEach(el => {
+            document.querySelectorAll('input[type="text"], input[type="date"], input[type="time"], input[type="number"], textarea').forEach(function(el) {
                 el.value = '';
             });
-            document.querySelectorAll('input[type="radio"]').forEach(el => {
+            document.querySelectorAll('input[type="radio"]').forEach(function(el) {
                 el.checked = false;
             });
             document.querySelector('input[name="status"][value="Pending"]').checked = true;
             document.getElementById('docNumber').textContent = '-NEW-';
-
             if (sigServicePad) sigServicePad.clear();
             if (sigCustomerPad) sigCustomerPad.clear();
-
-            // Set today's date
-            const today = new Date().toISOString().split('T')[0];
+            var today = new Date().toISOString().split('T')[0];
             document.getElementById('requestDate').value = today;
             document.getElementById('serviceDate').value = today;
-
             showToast('สร้างเอกสารใหม่แล้ว', 'info');
         }
 
         // ============ Save Report ============
         function saveReport() {
-            let data = collectFormData();
-
-            // Generate doc number if new
+            var data = collectFormData();
             if (data.docNumber === '-NEW-') {
                 data.docNumber = generateDocNumber();
                 document.getElementById('docNumber').textContent = data.docNumber;
             }
-
-            // Validate
             if (!data.customerName.trim()) {
                 showToast('กรุณากรอก Customer Name', 'error');
                 document.getElementById('customerName').focus();
                 return;
             }
-
-            // Save to localStorage
-            let docs = JSON.parse(localStorage.getItem('serviceReports') || '[]');
-            const existIdx = docs.findIndex(d => d.docNumber === data.docNumber);
-
+            var docs = JSON.parse(localStorage.getItem('serviceReports') || '[]');
+            var existIdx = -1;
+            for (var i = 0; i < docs.length; i++) {
+                if (docs[i].docNumber === data.docNumber) {
+                    existIdx = i;
+                    break;
+                }
+            }
             if (existIdx >= 0) {
                 docs[existIdx] = data;
             } else {
                 docs.push(data);
             }
-
             localStorage.setItem('serviceReports', JSON.stringify(docs));
-            showToast(`บันทึกเรียบร้อย: ${data.docNumber}`, 'success');
+            showToast('บันทึกเรียบร้อย: ' + data.docNumber, 'success');
         }
 
         // ============ Export PDF ============
         async function exportPDF() {
-            const docNum = document.getElementById('docNumber').textContent;
+            var docNum = document.getElementById('docNumber').textContent;
             if (docNum === '-NEW-') {
                 showToast('กรุณาบันทึกเอกสารก่อน Export PDF', 'error');
                 return;
             }
-
             showToast('กำลังสร้าง PDF...', 'info');
-
-            // Hide non-printable elements
-            const clearBtns = document.querySelectorAll('.clear-sig');
-            clearBtns.forEach(btn => btn.style.display = 'none');
-
-            const element = document.getElementById('reportPage');
-
+            var clearBtns = document.querySelectorAll('.clear-sig');
+            clearBtns.forEach(function(btn) { btn.style.display = 'none'; });
+            var element = document.getElementById('reportPage');
             try {
-                const canvas = await html2canvas(element, {
+                var canvas = await html2canvas(element, {
                     scale: 2,
                     useCORS: true,
                     backgroundColor: '#ffffff',
                     logging: false
                 });
-
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF('p', 'mm', 'a4');
-
-                const pageWidth = pdf.internal.pageSize.getWidth();
-                const pageHeight = pdf.internal.pageSize.getHeight();
-                const margin = 10;
-                const contentWidth = pageWidth - (margin * 2);
-
-                const imgWidth = contentWidth;
-                const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-                let yPosition = margin;
-                let remainingHeight = imgHeight;
-                let sourceY = 0;
-
-                const pageContentHeight = pageHeight - (margin * 2);
+                var jsPDF = window.jspdf.jsPDF;
+                var pdf = new jsPDF('p', 'mm', 'a4');
+                var pageWidth = pdf.internal.pageSize.getWidth();
+                var pageHeight = pdf.internal.pageSize.getHeight();
+                var margin = 10;
+                var contentWidth = pageWidth - (margin * 2);
+                var imgWidth = contentWidth;
+                var imgHeight = (canvas.height * imgWidth) / canvas.width;
+                var pageContentHeight = pageHeight - (margin * 2);
 
                 if (imgHeight <= pageContentHeight) {
                     pdf.addImage(canvas.toDataURL('image/png'), 'PNG', margin, margin, imgWidth, imgHeight);
                 } else {
+                    var remainingHeight = imgHeight;
+                    var sourceY = 0;
                     while (remainingHeight > 0) {
                         if (sourceY > 0) pdf.addPage();
-
-                        const sliceHeight = Math.min(pageContentHeight, remainingHeight);
-                        const sourcePixelY = (sourceY / imgHeight) * canvas.height;
-                        const sourcePixelHeight = (sliceHeight / imgHeight) * canvas.height;
-
-                        const sliceCanvas = document.createElement('canvas');
+                        var sliceHeight = Math.min(pageContentHeight, remainingHeight);
+                        var sourcePixelY = (sourceY / imgHeight) * canvas.height;
+                        var sourcePixelHeight = (sliceHeight / imgHeight) * canvas.height;
+                        var sliceCanvas = document.createElement('canvas');
                         sliceCanvas.width = canvas.width;
                         sliceCanvas.height = sourcePixelHeight;
-                        const sliceCtx = sliceCanvas.getContext('2d');
+                        var sliceCtx = sliceCanvas.getContext('2d');
                         sliceCtx.drawImage(canvas, 0, sourcePixelY, canvas.width, sourcePixelHeight, 0, 0, canvas.width, sourcePixelHeight);
-
                         pdf.addImage(sliceCanvas.toDataURL('image/png'), 'PNG', margin, margin, imgWidth, sliceHeight);
-
                         sourceY += sliceHeight;
                         remainingHeight -= sliceHeight;
                     }
                 }
-
-                pdf.save(`${docNum}.pdf`);
+                pdf.save(docNum + '.pdf');
                 showToast('PDF สร้างเรียบร้อย!', 'success');
             } catch (error) {
                 showToast('เกิดข้อผิดพลาดในการสร้าง PDF', 'error');
                 console.error(error);
             }
-
-            // Restore elements
-            clearBtns.forEach(btn => btn.style.display = '');
+            clearBtns.forEach(function(btn) { btn.style.display = ''; });
         }
 
         // ============ Document List ============
         function showDocList() {
-            const docs = JSON.parse(localStorage.getItem('serviceReports') || '[]');
-            const container = document.getElementById('docListContent');
-
+            var docs = JSON.parse(localStorage.getItem('serviceReports') || '[]');
+            var container = document.getElementById('docListContent');
             if (docs.length === 0) {
                 container.innerHTML = '<div class="no-docs">📭 ยังไม่มีเอกสาร<br>กด "New" เพื่อสร้าง Service Report ใหม่</div>';
             } else {
-                let html = '<table class="doc-list-table"><thead><tr>';
+                var html = '<table class="doc-list-table"><thead><tr>';
                 html += '<th>เลขที่เอกสาร</th><th>ลูกค้า</th><th>วันที่</th><th>สถานะ</th><th>จัดการ</th>';
                 html += '</tr></thead><tbody>';
-
-                docs.sort((a,b) => b.savedAt.localeCompare(a.savedAt));
-
-                docs.forEach((doc, idx) => {
-                    const statusClass = doc.status === 'Close' ? 'status-close' : 'status-pending';
-                    const savedDate = doc.savedAt ? new Date(doc.savedAt).toLocaleDateString('th-TH') : '-';
-                    html += `<tr>
-                        <td><strong>${doc.docNumber}</strong></td>
-                        <td>${doc.customerName || '-'}</td>
-                        <td>${savedDate}</td>
-                        <td><span class="status-badge ${statusClass}">${doc.status || 'Pending'}</span></td>
-                        <td>
-                            <button class="btn-load" onclick="loadReport('${doc.docNumber}')">📂 เปิด</button>
-                            <button class="btn-delete" onclick="deleteReport('${doc.docNumber}')">🗑️ ลบ</button>
-                        </td>
-                    </tr>`;
+                docs.sort(function(a, b) { return b.savedAt.localeCompare(a.savedAt); });
+                docs.forEach(function(doc) {
+                    var statusClass = doc.status === 'Close' ? 'status-close' : 'status-pending';
+                    var savedDate = doc.savedAt ? new Date(doc.savedAt).toLocaleDateString('th-TH') : '-';
+                    html += '<tr>';
+                    html += '<td><strong>' + doc.docNumber + '</strong></td>';
+                    html += '<td>' + (doc.customerName || '-') + '</td>';
+                    html += '<td>' + savedDate + '</td>';
+                    html += '<td><span class="status-badge ' + statusClass + '">' + (doc.status || 'Pending') + '</span></td>';
+                    html += '<td>';
+                    html += '<button class="btn-load" onclick="loadReport(\'' + doc.docNumber + '\')">📂 เปิด</button>';
+                    html += '<button class="btn-delete" onclick="deleteReport(\'' + doc.docNumber + '\')">🗑️ ลบ</button>';
+                    html += '</td>';
+                    html += '</tr>';
                 });
-
                 html += '</tbody></table>';
                 container.innerHTML = html;
             }
-
             document.getElementById('docListModal').classList.add('active');
         }
 
@@ -1366,30 +1291,41 @@
         }
 
         function loadReport(docNumber) {
-            const docs = JSON.parse(localStorage.getItem('serviceReports') || '[]');
-            const doc = docs.find(d => d.docNumber === docNumber);
+            var docs = JSON.parse(localStorage.getItem('serviceReports') || '[]');
+            var doc = null;
+            for (var i = 0; i < docs.length; i++) {
+                if (docs[i].docNumber === docNumber) {
+                    doc = docs[i];
+                    break;
+                }
+            }
             if (doc) {
                 loadFormData(doc);
                 closeDocList();
-                showToast(`โหลดเอกสาร ${docNumber}`, 'success');
+                showToast('โหลดเอกสาร ' + docNumber, 'success');
             }
         }
 
         function deleteReport(docNumber) {
-            if (!confirm(`ลบเอกสาร ${docNumber}?`)) return;
-            let docs = JSON.parse(localStorage.getItem('serviceReports') || '[]');
-            docs = docs.filter(d => d.docNumber !== docNumber);
-            localStorage.setItem('serviceReports', JSON.stringify(docs));
+            if (!confirm('ลบเอกสาร ' + docNumber + '?')) return;
+            var docs = JSON.parse(localStorage.getItem('serviceReports') || '[]');
+            var newDocs = [];
+            for (var i = 0; i < docs.length; i++) {
+                if (docs[i].docNumber !== docNumber) {
+                    newDocs.push(docs[i]);
+                }
+            }
+            localStorage.setItem('serviceReports', JSON.stringify(newDocs));
             showDocList();
-            showToast(`ลบเอกสาร ${docNumber} แล้ว`, 'info');
+            showToast('ลบเอกสาร ' + docNumber + ' แล้ว', 'info');
         }
 
         // ============ Toast ============
         function showToast(message, type) {
-            const toast = document.getElementById('toast');
+            var toast = document.getElementById('toast');
             toast.textContent = message;
-            toast.className = `toast toast-${type} show`;
-            setTimeout(() => {
+            toast.className = 'toast toast-' + type + ' show';
+            setTimeout(function() {
                 toast.classList.remove('show');
             }, 3000);
         }
@@ -1400,8 +1336,8 @@
         });
 
         // ============ Init ============
-        window.addEventListener('load', () => {
-            const today = new Date().toISOString().split('T')[0];
+        window.addEventListener('load', function() {
+            var today = new Date().toISOString().split('T')[0];
             document.getElementById('requestDate').value = today;
             document.getElementById('serviceDate').value = today;
         });
