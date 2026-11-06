@@ -90,15 +90,15 @@
             min-height: 80px;
         }
         .header-logo {
-            flex: 0 0 180px;
+            flex: 0 0 160px;
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 10px 15px;
+            padding: 10px 12px;
             border-right: 2px solid #333;
         }
         .header-logo img {
-            max-width: 150px;
+            max-width: 140px;
             max-height: 55px;
             object-fit: contain;
         }
@@ -107,7 +107,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 10px 20px;
+            padding: 10px 15px;
             border-right: 2px solid #333;
         }
         .header-title h2 {
@@ -117,8 +117,10 @@
             text-transform: uppercase;
             color: #1a237e;
         }
+
+        /* ===== No. ช่องกว้างขึ้น 240px ===== */
         .header-docinfo {
-            flex: 0 0 180px;
+            flex: 0 0 240px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -126,14 +128,15 @@
         }
         .doc-no-wrapper {
             display: flex;
-            align-items: flex-start;
+            align-items: center;
             gap: 8px;
+            white-space: nowrap;
         }
         .doc-label-no {
             font-weight: 700;
             font-size: 20px;
             white-space: nowrap;
-            line-height: 1.3;
+            line-height: 1;
         }
         .doc-value {
             font-weight: 700;
@@ -141,8 +144,8 @@
             color: #d32f2f;
             font-family: 'Courier New', monospace;
             letter-spacing: 0.5px;
-            line-height: 1.3;
-            word-break: break-all;
+            line-height: 1;
+            white-space: nowrap;
         }
 
         /* ============ FORM ============ */
@@ -446,7 +449,7 @@
             border-color: #1a237e;
         }
 
-        /* ============ PDF PREVIEW MODAL (มือถือ) ============ */
+        /* ============ PDF MODAL ============ */
         .pdf-modal-overlay {
             display: none;
             position: fixed;
@@ -458,9 +461,7 @@
             align-items: center;
             padding: 15px;
         }
-        .pdf-modal-overlay.active {
-            display: flex;
-        }
+        .pdf-modal-overlay.active { display: flex; }
         .pdf-modal-content {
             background: white;
             border-radius: 16px;
@@ -500,28 +501,12 @@
             gap: 8px;
             transition: all 0.2s;
         }
-        .pdf-btn-download {
-            background: #f44336;
-            color: white;
-        }
-        .pdf-btn-download:hover { background: #c62828; }
-        .pdf-btn-share {
-            background: #4CAF50;
-            color: white;
-        }
-        .pdf-btn-share:hover { background: #388E3C; }
-        .pdf-btn-preview {
-            background: #2196F3;
-            color: white;
-        }
-        .pdf-btn-preview:hover { background: #1565C0; }
-        .pdf-btn-close {
-            background: #eee;
-            color: #333;
-        }
-        .pdf-btn-close:hover { background: #ddd; }
+        .pdf-btn-download { background: #f44336; color: white; }
+        .pdf-btn-share { background: #4CAF50; color: white; }
+        .pdf-btn-preview { background: #2196F3; color: white; }
+        .pdf-btn-close { background: #eee; color: #333; }
 
-        /* Loading overlay */
+        /* Loading */
         .loading-overlay {
             display: none;
             position: fixed;
@@ -532,9 +517,7 @@
             justify-content: center;
             align-items: center;
         }
-        .loading-overlay.active {
-            display: flex;
-        }
+        .loading-overlay.active { display: flex; }
         .loading-spinner {
             background: white;
             border-radius: 16px;
@@ -543,24 +526,17 @@
             box-shadow: 0 10px 40px rgba(0,0,0,0.3);
         }
         .loading-spinner .spinner {
-            width: 50px;
-            height: 50px;
+            width: 50px; height: 50px;
             border: 5px solid #eee;
             border-top: 5px solid #1a237e;
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
             margin: 0 auto 15px auto;
         }
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-        .loading-spinner p {
-            color: #333;
-            font-weight: 600;
-            font-size: 15px;
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-spinner p { color: #333; font-weight: 600; font-size: 15px; }
 
-        /* Modal */
+        /* Doc List Modal */
         .modal-overlay {
             display: none;
             position: fixed;
@@ -591,31 +567,20 @@
         }
         .modal-header h2 { color: #1a237e; }
         .modal-close {
-            background: #f44336;
-            color: white;
-            border: none;
-            border-radius: 50%;
+            background: #f44336; color: white;
+            border: none; border-radius: 50%;
             width: 35px; height: 35px;
-            font-size: 18px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            font-size: 18px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
         }
-        .doc-list-table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+        .doc-list-table { width: 100%; border-collapse: collapse; }
         .doc-list-table th, .doc-list-table td {
             border: 1px solid #ddd;
             padding: 10px;
             text-align: left;
             font-size: 13px;
         }
-        .doc-list-table th {
-            background: #1a237e;
-            color: white;
-        }
+        .doc-list-table th { background: #1a237e; color: white; }
         .doc-list-table tr:nth-child(even) { background: #f5f5f5; }
         .doc-list-table tr:hover { background: #e3f2fd; }
         .btn-load {
@@ -629,12 +594,7 @@
             border-radius: 4px; cursor: pointer; font-size: 12px;
             margin-left: 5px;
         }
-        .no-docs {
-            text-align: center;
-            padding: 40px;
-            color: #999;
-            font-size: 16px;
-        }
+        .no-docs { text-align: center; padding: 40px; color: #999; font-size: 16px; }
 
         /* Toast */
         .toast {
@@ -674,22 +634,15 @@
                 padding: 10px 15px;
             }
             .top-nav h1 { font-size: 16px; }
-            .nav-buttons {
-                width: 100%;
-                justify-content: center;
-            }
+            .nav-buttons { width: 100%; justify-content: center; }
             .nav-btn {
                 padding: 8px 12px;
                 font-size: 12px;
                 flex: 1;
                 justify-content: center;
             }
-            .report-page {
-                padding: 20px 15px;
-            }
-            .report-header {
-                flex-direction: column;
-            }
+            .report-page { padding: 20px 15px; }
+            .report-header { flex-direction: column; }
             .header-logo {
                 border-right: none;
                 border-bottom: 2px solid #333;
@@ -701,46 +654,23 @@
                 border-bottom: 2px solid #333;
                 padding: 8px;
             }
-            .header-title h2 {
-                font-size: 20px;
-                letter-spacing: 2px;
-            }
+            .header-title h2 { font-size: 20px; letter-spacing: 2px; }
             .header-docinfo {
                 flex: none;
                 padding: 8px 15px;
-            }
-            .form-row {
-                flex-direction: column;
-                gap: 8px;
-            }
-            .form-group {
-                min-width: 100%;
-            }
-            .service-time-row {
-                flex-wrap: wrap;
-                gap: 8px;
-            }
-            .time-group {
-                flex: 1;
-                min-width: 45%;
-            }
-            .radio-group { gap: 8px; }
-            .bottom-section {
-                flex-direction: column;
-            }
-            .charge-table {
-                flex: none;
                 width: 100%;
+                justify-content: center;
             }
-            .signature-section {
-                flex-direction: column;
-            }
-            .parts-table {
-                font-size: 11px;
-            }
-            .parts-table th, .parts-table td {
-                padding: 4px 5px;
-            }
+            .form-row { flex-direction: column; gap: 8px; }
+            .form-group { min-width: 100%; }
+            .service-time-row { flex-wrap: wrap; gap: 8px; }
+            .time-group { flex: 1; min-width: 45%; }
+            .radio-group { gap: 8px; }
+            .bottom-section { flex-direction: column; }
+            .charge-table { flex: none; width: 100%; }
+            .signature-section { flex-direction: column; }
+            .parts-table { font-size: 11px; }
+            .parts-table th, .parts-table td { padding: 4px 5px; }
         }
 
         @media print {
@@ -996,29 +926,21 @@
         </div>
     </div>
 
-    <!-- PDF Options Modal (มือถือ) -->
+    <!-- PDF Options Modal -->
     <div class="pdf-modal-overlay" id="pdfModal">
         <div class="pdf-modal-content">
             <h3>📥 PDF สร้างเรียบร้อย!</h3>
-            <p id="pdfFileName">SR-202506-0001.pdf</p>
+            <p id="pdfFileName"></p>
             <div class="pdf-modal-buttons">
-                <button class="pdf-action-btn pdf-btn-download" id="pdfDownloadBtn" onclick="pdfDownload()">
-                    📥 ดาวน์โหลด PDF
-                </button>
-                <button class="pdf-action-btn pdf-btn-share" id="pdfShareBtn" onclick="pdfShare()" style="display:none;">
-                    📤 แชร์ / ส่งไฟล์
-                </button>
-                <button class="pdf-action-btn pdf-btn-preview" id="pdfPreviewBtn" onclick="pdfPreview()">
-                    👁️ ดูตัวอย่าง
-                </button>
-                <button class="pdf-action-btn pdf-btn-close" onclick="closePdfModal()">
-                    ✕ ปิด
-                </button>
+                <button class="pdf-action-btn pdf-btn-download" onclick="pdfDownload()">📥 ดาวน์โหลด PDF</button>
+                <button class="pdf-action-btn pdf-btn-share" id="pdfShareBtn" onclick="pdfShare()" style="display:none;">📤 แชร์ / ส่งไฟล์</button>
+                <button class="pdf-action-btn pdf-btn-preview" onclick="pdfPreview()">👁️ ดูตัวอย่าง</button>
+                <button class="pdf-action-btn pdf-btn-close" onclick="closePdfModal()">✕ ปิด</button>
             </div>
         </div>
     </div>
 
-    <!-- Loading Overlay -->
+    <!-- Loading -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner">
             <div class="spinner"></div>
@@ -1030,16 +952,12 @@
     <div class="toast" id="toast"></div>
 
     <script>
-        // ============ Global PDF State ============
         let currentPdfBlob = null;
         let currentPdfFileName = '';
 
-        // ============ Device Detection ============
         function isMobile() {
-            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
-                || window.innerWidth <= 768;
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
         }
-
         function canShare() {
             return navigator.share && navigator.canShare;
         }
@@ -1050,86 +968,33 @@
                 this.canvas = document.getElementById(canvasId);
                 this.ctx = this.canvas.getContext('2d');
                 this.drawing = false;
-                this.lastX = 0;
-                this.lastY = 0;
+                this.lastX = 0; this.lastY = 0;
                 this.resizeCanvas();
                 window.addEventListener('resize', () => this.resizeCanvas());
-                // Mouse
-                this.canvas.addEventListener('mousedown', (e) => this.startDrawing(e));
-                this.canvas.addEventListener('mousemove', (e) => this.draw(e));
-                this.canvas.addEventListener('mouseup', () => this.stopDrawing());
-                this.canvas.addEventListener('mouseout', () => this.stopDrawing());
-                // Touch
-                this.canvas.addEventListener('touchstart', (e) => this.startDrawingTouch(e), {passive:false});
-                this.canvas.addEventListener('touchmove', (e) => this.drawTouch(e), {passive:false});
-                this.canvas.addEventListener('touchend', () => this.stopDrawing());
+                this.canvas.addEventListener('mousedown', e => this.startDraw(e));
+                this.canvas.addEventListener('mousemove', e => this.draw(e));
+                this.canvas.addEventListener('mouseup', () => this.drawing=false);
+                this.canvas.addEventListener('mouseout', () => this.drawing=false);
+                this.canvas.addEventListener('touchstart', e => this.startDrawTouch(e), {passive:false});
+                this.canvas.addEventListener('touchmove', e => this.drawTouch(e), {passive:false});
+                this.canvas.addEventListener('touchend', () => this.drawing=false);
             }
             resizeCanvas() {
                 const w = this.canvas.parentElement;
-                const data = this.canvas.toDataURL();
+                const d = this.canvas.toDataURL();
                 this.canvas.width = w.offsetWidth;
                 this.canvas.height = w.offsetHeight;
-                if (data && data !== 'data:,') {
-                    const img = new Image();
-                    img.onload = () => { this.ctx.drawImage(img, 0, 0); };
-                    img.src = data;
-                }
-                this.ctx.strokeStyle = '#000';
-                this.ctx.lineWidth = 2;
-                this.ctx.lineCap = 'round';
-                this.ctx.lineJoin = 'round';
+                if (d && d !== 'data:,') { const i = new Image(); i.onload = () => this.ctx.drawImage(i,0,0); i.src = d; }
+                this.ctx.strokeStyle = '#000'; this.ctx.lineWidth = 2; this.ctx.lineCap = 'round'; this.ctx.lineJoin = 'round';
             }
-            getPos(e) {
-                const r = this.canvas.getBoundingClientRect();
-                return { x: e.clientX - r.left, y: e.clientY - r.top };
-            }
-            startDrawing(e) {
-                this.drawing = true;
-                const p = this.getPos(e);
-                this.lastX = p.x; this.lastY = p.y;
-            }
-            draw(e) {
-                if (!this.drawing) return;
-                const p = this.getPos(e);
-                this.ctx.beginPath();
-                this.ctx.moveTo(this.lastX, this.lastY);
-                this.ctx.lineTo(p.x, p.y);
-                this.ctx.stroke();
-                this.lastX = p.x; this.lastY = p.y;
-            }
-            startDrawingTouch(e) {
-                e.preventDefault();
-                const t = e.touches[0];
-                const r = this.canvas.getBoundingClientRect();
-                this.drawing = true;
-                this.lastX = t.clientX - r.left;
-                this.lastY = t.clientY - r.top;
-            }
-            drawTouch(e) {
-                if (!this.drawing) return;
-                e.preventDefault();
-                const t = e.touches[0];
-                const r = this.canvas.getBoundingClientRect();
-                const x = t.clientX - r.left;
-                const y = t.clientY - r.top;
-                this.ctx.beginPath();
-                this.ctx.moveTo(this.lastX, this.lastY);
-                this.ctx.lineTo(x, y);
-                this.ctx.stroke();
-                this.lastX = x; this.lastY = y;
-            }
-            stopDrawing() { this.drawing = false; }
-            clear() { this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); }
+            getPos(e) { const r = this.canvas.getBoundingClientRect(); return {x:e.clientX-r.left, y:e.clientY-r.top}; }
+            startDraw(e) { this.drawing=true; const p=this.getPos(e); this.lastX=p.x; this.lastY=p.y; }
+            draw(e) { if(!this.drawing) return; const p=this.getPos(e); this.ctx.beginPath(); this.ctx.moveTo(this.lastX,this.lastY); this.ctx.lineTo(p.x,p.y); this.ctx.stroke(); this.lastX=p.x; this.lastY=p.y; }
+            startDrawTouch(e) { e.preventDefault(); const t=e.touches[0], r=this.canvas.getBoundingClientRect(); this.drawing=true; this.lastX=t.clientX-r.left; this.lastY=t.clientY-r.top; }
+            drawTouch(e) { if(!this.drawing) return; e.preventDefault(); const t=e.touches[0], r=this.canvas.getBoundingClientRect(); const x=t.clientX-r.left, y=t.clientY-r.top; this.ctx.beginPath(); this.ctx.moveTo(this.lastX,this.lastY); this.ctx.lineTo(x,y); this.ctx.stroke(); this.lastX=x; this.lastY=y; }
+            clear() { this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height); }
             getData() { return this.canvas.toDataURL(); }
-            loadData(data) {
-                if (!data) return;
-                const img = new Image();
-                img.onload = () => {
-                    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-                    this.ctx.drawImage(img, 0, 0);
-                };
-                img.src = data;
-            }
+            loadData(d) { if(!d) return; const i=new Image(); i.onload=()=>{this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height); this.ctx.drawImage(i,0,0);}; i.src=d; }
         }
 
         let sigServicePad, sigCustomerPad;
@@ -1139,435 +1004,266 @@
                 sigCustomerPad = new SignaturePad('sigCustomer');
             }, 100);
         });
-
-        function clearSignature(id) {
-            if (id === 'sigService') sigServicePad.clear();
-            if (id === 'sigCustomer') sigCustomerPad.clear();
-        }
+        function clearSignature(id) { if(id==='sigService') sigServicePad.clear(); if(id==='sigCustomer') sigCustomerPad.clear(); }
 
         // ============ Auto Calculate ============
         document.getElementById('startTime').addEventListener('change', calcTotalTime);
         document.getElementById('finishTime').addEventListener('change', calcTotalTime);
         function calcTotalTime() {
-            const s = document.getElementById('startTime').value;
-            const f = document.getElementById('finishTime').value;
-            if (s && f) {
-                const sa = s.split(':').map(Number);
-                const fa = f.split(':').map(Number);
-                let m = (fa[0]*60+fa[1]) - (sa[0]*60+sa[1]);
-                if (m < 0) m += 1440;
-                document.getElementById('totalTime').value = Math.floor(m/60)+' Hrs '+(m%60)+' Min';
-            }
+            const s=document.getElementById('startTime').value, f=document.getElementById('finishTime').value;
+            if(s&&f){ const sa=s.split(':').map(Number), fa=f.split(':').map(Number); let m=(fa[0]*60+fa[1])-(sa[0]*60+sa[1]); if(m<0)m+=1440; document.getElementById('totalTime').value=Math.floor(m/60)+' Hrs '+(m%60)+' Min'; }
         }
-
         document.getElementById('serviceCharge').addEventListener('input', calcTotal);
         document.getElementById('travelCharge').addEventListener('input', calcTotal);
         function calcTotal() {
-            const sc = parseFloat(document.getElementById('serviceCharge').value)||0;
-            const tc = parseFloat(document.getElementById('travelCharge').value)||0;
-            document.getElementById('totalCharge').value = (sc+tc).toLocaleString();
+            const sc=parseFloat(document.getElementById('serviceCharge').value)||0, tc=parseFloat(document.getElementById('travelCharge').value)||0;
+            document.getElementById('totalCharge').value=(sc+tc).toLocaleString();
         }
 
         // ============ Doc Number ============
         function generateDocNumber() {
-            const now = new Date();
-            const prefix = 'SR-'+now.getFullYear()+String(now.getMonth()+1).padStart(2,'0')+'-';
-            let docs = JSON.parse(localStorage.getItem('serviceReports')||'[]');
-            let max = 0;
-            docs.forEach(d => {
-                if (d.docNumber && d.docNumber.startsWith(prefix)) {
-                    const n = parseInt(d.docNumber.replace(prefix,''));
-                    if (n > max) max = n;
-                }
-            });
-            return prefix + String(max+1).padStart(4,'0');
+            const now=new Date(), prefix='SR-'+now.getFullYear()+String(now.getMonth()+1).padStart(2,'0')+'-';
+            let docs=JSON.parse(localStorage.getItem('serviceReports')||'[]'), max=0;
+            docs.forEach(d=>{ if(d.docNumber&&d.docNumber.startsWith(prefix)){ const n=parseInt(d.docNumber.replace(prefix,'')); if(n>max)max=n; }});
+            return prefix+String(max+1).padStart(4,'0');
         }
 
         // ============ Radio Helpers ============
-        function getRadioValue(name) {
-            const el = document.querySelector('input[name="'+name+'"]:checked');
-            return el ? el.value : '';
-        }
-        function setRadioValue(name, val) {
-            if (!val) return;
-            const el = document.querySelector('input[name="'+name+'"][value="'+val+'"]');
-            if (el) el.checked = true;
-        }
+        function getRadioValue(n) { const e=document.querySelector('input[name="'+n+'"]:checked'); return e?e.value:''; }
+        function setRadioValue(n,v) { if(!v)return; const e=document.querySelector('input[name="'+n+'"][value="'+v+'"]'); if(e)e.checked=true; }
 
         // ============ Collect / Load ============
         function collectFormData() {
             return {
-                docNumber: document.getElementById('docNumber').textContent,
-                customerName: document.getElementById('customerName').value,
-                projectNo: document.getElementById('projectNo').value,
-                address: document.getElementById('address').value,
-                tel: document.getElementById('tel').value,
-                serviceType: getRadioValue('serviceType'),
-                serviceTypeOther: document.getElementById('serviceTypeOther').value,
-                requestDate: document.getElementById('requestDate').value,
-                requestTime: document.getElementById('requestTime').value,
-                problemType: getRadioValue('problemType'),
-                problemTypeOther: document.getElementById('problemTypeOther').value,
-                severity: getRadioValue('severity'),
-                locationType: getRadioValue('locationType'),
-                product: document.getElementById('product').value,
-                model: document.getElementById('model').value,
-                serialNo: document.getElementById('serialNo').value,
-                subject: document.getElementById('subject').value,
-                action: document.getElementById('action').value,
-                remark: document.getElementById('remark').value,
-                serviceDate: document.getElementById('serviceDate').value,
-                startTime: document.getElementById('startTime').value,
-                finishTime: document.getElementById('finishTime').value,
-                totalTime: document.getElementById('totalTime').value,
-                status: getRadioValue('status'),
-                sparePartNo: document.getElementById('sparePartNo').value,
-                spareDesc: document.getElementById('spareDesc').value,
-                spareQty: document.getElementById('spareQty').value,
-                spareSN: document.getElementById('spareSN').value,
-                defPartNo: document.getElementById('defPartNo').value,
-                defDesc: document.getElementById('defDesc').value,
-                defQty: document.getElementById('defQty').value,
-                defSN: document.getElementById('defSN').value,
-                serviceCharge: document.getElementById('serviceCharge').value,
-                travelCharge: document.getElementById('travelCharge').value,
-                totalCharge: document.getElementById('totalCharge').value,
-                servicedByName: document.getElementById('servicedByName').value,
-                customerByName: document.getElementById('customerByName').value,
-                sigServiceData: sigServicePad ? sigServicePad.getData() : '',
-                sigCustomerData: sigCustomerPad ? sigCustomerPad.getData() : '',
-                savedAt: new Date().toISOString()
+                docNumber:document.getElementById('docNumber').textContent,
+                customerName:document.getElementById('customerName').value,
+                projectNo:document.getElementById('projectNo').value,
+                address:document.getElementById('address').value,
+                tel:document.getElementById('tel').value,
+                serviceType:getRadioValue('serviceType'),
+                serviceTypeOther:document.getElementById('serviceTypeOther').value,
+                requestDate:document.getElementById('requestDate').value,
+                requestTime:document.getElementById('requestTime').value,
+                problemType:getRadioValue('problemType'),
+                problemTypeOther:document.getElementById('problemTypeOther').value,
+                severity:getRadioValue('severity'),
+                locationType:getRadioValue('locationType'),
+                product:document.getElementById('product').value,
+                model:document.getElementById('model').value,
+                serialNo:document.getElementById('serialNo').value,
+                subject:document.getElementById('subject').value,
+                action:document.getElementById('action').value,
+                remark:document.getElementById('remark').value,
+                serviceDate:document.getElementById('serviceDate').value,
+                startTime:document.getElementById('startTime').value,
+                finishTime:document.getElementById('finishTime').value,
+                totalTime:document.getElementById('totalTime').value,
+                status:getRadioValue('status'),
+                sparePartNo:document.getElementById('sparePartNo').value,
+                spareDesc:document.getElementById('spareDesc').value,
+                spareQty:document.getElementById('spareQty').value,
+                spareSN:document.getElementById('spareSN').value,
+                defPartNo:document.getElementById('defPartNo').value,
+                defDesc:document.getElementById('defDesc').value,
+                defQty:document.getElementById('defQty').value,
+                defSN:document.getElementById('defSN').value,
+                serviceCharge:document.getElementById('serviceCharge').value,
+                travelCharge:document.getElementById('travelCharge').value,
+                totalCharge:document.getElementById('totalCharge').value,
+                servicedByName:document.getElementById('servicedByName').value,
+                customerByName:document.getElementById('customerByName').value,
+                sigServiceData:sigServicePad?sigServicePad.getData():'',
+                sigCustomerData:sigCustomerPad?sigCustomerPad.getData():'',
+                savedAt:new Date().toISOString()
             };
         }
-
         function loadFormData(d) {
-            document.getElementById('docNumber').textContent = d.docNumber||'-NEW-';
-            document.getElementById('customerName').value = d.customerName||'';
-            document.getElementById('projectNo').value = d.projectNo||'';
-            document.getElementById('address').value = d.address||'';
-            document.getElementById('tel').value = d.tel||'';
-            setRadioValue('serviceType', d.serviceType);
-            document.getElementById('serviceTypeOther').value = d.serviceTypeOther||'';
-            document.getElementById('requestDate').value = d.requestDate||'';
-            document.getElementById('requestTime').value = d.requestTime||'';
-            setRadioValue('problemType', d.problemType);
-            document.getElementById('problemTypeOther').value = d.problemTypeOther||'';
-            setRadioValue('severity', d.severity);
-            setRadioValue('locationType', d.locationType);
-            document.getElementById('product').value = d.product||'';
-            document.getElementById('model').value = d.model||'';
-            document.getElementById('serialNo').value = d.serialNo||'';
-            document.getElementById('subject').value = d.subject||'';
-            document.getElementById('action').value = d.action||'';
-            document.getElementById('remark').value = d.remark||'';
-            document.getElementById('serviceDate').value = d.serviceDate||'';
-            document.getElementById('startTime').value = d.startTime||'';
-            document.getElementById('finishTime').value = d.finishTime||'';
-            document.getElementById('totalTime').value = d.totalTime||'';
-            setRadioValue('status', d.status);
-            document.getElementById('sparePartNo').value = d.sparePartNo||'';
-            document.getElementById('spareDesc').value = d.spareDesc||'';
-            document.getElementById('spareQty').value = d.spareQty||'';
-            document.getElementById('spareSN').value = d.spareSN||'';
-            document.getElementById('defPartNo').value = d.defPartNo||'';
-            document.getElementById('defDesc').value = d.defDesc||'';
-            document.getElementById('defQty').value = d.defQty||'';
-            document.getElementById('defSN').value = d.defSN||'';
-            document.getElementById('serviceCharge').value = d.serviceCharge||'';
-            document.getElementById('travelCharge').value = d.travelCharge||'';
-            document.getElementById('totalCharge').value = d.totalCharge||'';
-            document.getElementById('servicedByName').value = d.servicedByName||'';
-            document.getElementById('customerByName').value = d.customerByName||'';
-            if (d.sigServiceData && sigServicePad) setTimeout(()=>sigServicePad.loadData(d.sigServiceData),200);
-            if (d.sigCustomerData && sigCustomerPad) setTimeout(()=>sigCustomerPad.loadData(d.sigCustomerData),200);
+            document.getElementById('docNumber').textContent=d.docNumber||'-NEW-';
+            document.getElementById('customerName').value=d.customerName||'';
+            document.getElementById('projectNo').value=d.projectNo||'';
+            document.getElementById('address').value=d.address||'';
+            document.getElementById('tel').value=d.tel||'';
+            setRadioValue('serviceType',d.serviceType);
+            document.getElementById('serviceTypeOther').value=d.serviceTypeOther||'';
+            document.getElementById('requestDate').value=d.requestDate||'';
+            document.getElementById('requestTime').value=d.requestTime||'';
+            setRadioValue('problemType',d.problemType);
+            document.getElementById('problemTypeOther').value=d.problemTypeOther||'';
+            setRadioValue('severity',d.severity);
+            setRadioValue('locationType',d.locationType);
+            document.getElementById('product').value=d.product||'';
+            document.getElementById('model').value=d.model||'';
+            document.getElementById('serialNo').value=d.serialNo||'';
+            document.getElementById('subject').value=d.subject||'';
+            document.getElementById('action').value=d.action||'';
+            document.getElementById('remark').value=d.remark||'';
+            document.getElementById('serviceDate').value=d.serviceDate||'';
+            document.getElementById('startTime').value=d.startTime||'';
+            document.getElementById('finishTime').value=d.finishTime||'';
+            document.getElementById('totalTime').value=d.totalTime||'';
+            setRadioValue('status',d.status);
+            document.getElementById('sparePartNo').value=d.sparePartNo||'';
+            document.getElementById('spareDesc').value=d.spareDesc||'';
+            document.getElementById('spareQty').value=d.spareQty||'';
+            document.getElementById('spareSN').value=d.spareSN||'';
+            document.getElementById('defPartNo').value=d.defPartNo||'';
+            document.getElementById('defDesc').value=d.defDesc||'';
+            document.getElementById('defQty').value=d.defQty||'';
+            document.getElementById('defSN').value=d.defSN||'';
+            document.getElementById('serviceCharge').value=d.serviceCharge||'';
+            document.getElementById('travelCharge').value=d.travelCharge||'';
+            document.getElementById('totalCharge').value=d.totalCharge||'';
+            document.getElementById('servicedByName').value=d.servicedByName||'';
+            document.getElementById('customerByName').value=d.customerByName||'';
+            if(d.sigServiceData&&sigServicePad) setTimeout(()=>sigServicePad.loadData(d.sigServiceData),200);
+            if(d.sigCustomerData&&sigCustomerPad) setTimeout(()=>sigCustomerPad.loadData(d.sigCustomerData),200);
         }
 
         // ============ New Report ============
         function newReport() {
-            if (!confirm('สร้างเอกสารใหม่? ข้อมูลที่ยังไม่ได้บันทึกจะหายไป')) return;
-            document.querySelectorAll('input[type="text"],input[type="date"],input[type="time"],input[type="number"],textarea').forEach(el=>el.value='');
-            document.querySelectorAll('input[type="radio"]').forEach(el=>el.checked=false);
-            document.querySelector('input[name="status"][value="Pending"]').checked = true;
-            document.getElementById('docNumber').textContent = '-NEW-';
-            if (sigServicePad) sigServicePad.clear();
-            if (sigCustomerPad) sigCustomerPad.clear();
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('requestDate').value = today;
-            document.getElementById('serviceDate').value = today;
+            if(!confirm('สร้างเอกสารใหม่?')) return;
+            document.querySelectorAll('input[type="text"],input[type="date"],input[type="time"],input[type="number"],textarea').forEach(e=>e.value='');
+            document.querySelectorAll('input[type="radio"]').forEach(e=>e.checked=false);
+            document.querySelector('input[name="status"][value="Pending"]').checked=true;
+            document.getElementById('docNumber').textContent='-NEW-';
+            if(sigServicePad) sigServicePad.clear();
+            if(sigCustomerPad) sigCustomerPad.clear();
+            const t=new Date().toISOString().split('T')[0];
+            document.getElementById('requestDate').value=t;
+            document.getElementById('serviceDate').value=t;
             showToast('สร้างเอกสารใหม่แล้ว','info');
         }
 
-        // ============ Save Report ============
+        // ============ Save ============
         function saveReport() {
-            let data = collectFormData();
-            if (data.docNumber === '-NEW-') {
-                data.docNumber = generateDocNumber();
-                document.getElementById('docNumber').textContent = data.docNumber;
-            }
-            if (!data.customerName.trim()) {
-                showToast('กรุณากรอก Customer Name','error');
-                document.getElementById('customerName').focus();
-                return;
-            }
-            let docs = JSON.parse(localStorage.getItem('serviceReports')||'[]');
-            const idx = docs.findIndex(d=>d.docNumber===data.docNumber);
-            if (idx>=0) docs[idx]=data; else docs.push(data);
-            localStorage.setItem('serviceReports', JSON.stringify(docs));
+            let data=collectFormData();
+            if(data.docNumber==='-NEW-'){ data.docNumber=generateDocNumber(); document.getElementById('docNumber').textContent=data.docNumber; }
+            if(!data.customerName.trim()){ showToast('กรุณากรอก Customer Name','error'); document.getElementById('customerName').focus(); return; }
+            let docs=JSON.parse(localStorage.getItem('serviceReports')||'[]');
+            const idx=docs.findIndex(d=>d.docNumber===data.docNumber);
+            if(idx>=0) docs[idx]=data; else docs.push(data);
+            localStorage.setItem('serviceReports',JSON.stringify(docs));
             showToast('บันทึกเรียบร้อย: '+data.docNumber,'success');
         }
 
-        // ============ EXPORT PDF - รองรับมือถือ ============
+        // ============ EXPORT PDF ============
         async function exportPDF() {
-            const docNum = document.getElementById('docNumber').textContent;
-            if (docNum === '-NEW-') {
-                showToast('กรุณาบันทึกเอกสารก่อน Export PDF','error');
-                return;
-            }
-
-            // Show loading
+            const docNum=document.getElementById('docNumber').textContent;
+            if(docNum==='-NEW-'){ showToast('กรุณาบันทึกก่อน Export','error'); return; }
             document.getElementById('loadingOverlay').classList.add('active');
-
-            // Hide non-print elements
-            const clearBtns = document.querySelectorAll('.clear-sig');
+            const clearBtns=document.querySelectorAll('.clear-sig');
             clearBtns.forEach(b=>b.style.display='none');
-
             try {
-                const element = document.getElementById('reportPage');
-
-                // Scroll to top first (fix mobile rendering)
-                window.scrollTo(0, 0);
-                await new Promise(r => setTimeout(r, 300));
-
-                const canvas = await html2canvas(element, {
-                    scale: 2,
-                    useCORS: true,
-                    backgroundColor: '#ffffff',
-                    logging: false,
-                    allowTaint: true,
-                    scrollX: 0,
-                    scrollY: -window.scrollY,
-                    windowWidth: element.scrollWidth,
-                    windowHeight: element.scrollHeight
+                window.scrollTo(0,0);
+                await new Promise(r=>setTimeout(r,300));
+                const el=document.getElementById('reportPage');
+                const canvas=await html2canvas(el,{
+                    scale:2, useCORS:true, backgroundColor:'#ffffff',
+                    logging:false, allowTaint:true,
+                    scrollX:0, scrollY:-window.scrollY,
+                    windowWidth:el.scrollWidth, windowHeight:el.scrollHeight
                 });
-
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF('p','mm','a4');
-                const pw = pdf.internal.pageSize.getWidth();
-                const ph = pdf.internal.pageSize.getHeight();
-                const margin = 10;
-                const cw = pw - margin*2;
-                const imgW = cw;
-                const imgH = (canvas.height * imgW) / canvas.width;
-                const pch = ph - margin*2;
-
-                if (imgH <= pch) {
-                    pdf.addImage(canvas.toDataURL('image/png'),'PNG',margin,margin,imgW,imgH);
+                const{jsPDF}=window.jspdf;
+                const pdf=new jsPDF('p','mm','a4');
+                const pw=pdf.internal.pageSize.getWidth(), ph=pdf.internal.pageSize.getHeight(), mg=10;
+                const cw=pw-mg*2, imgW=cw, imgH=(canvas.height*imgW)/canvas.width, pch=ph-mg*2;
+                if(imgH<=pch){
+                    pdf.addImage(canvas.toDataURL('image/png'),'PNG',mg,mg,imgW,imgH);
                 } else {
-                    let rem = imgH, sy = 0;
-                    while (rem > 0) {
-                        if (sy > 0) pdf.addPage();
-                        const sh = Math.min(pch, rem);
-                        const spy = (sy/imgH)*canvas.height;
-                        const sph = (sh/imgH)*canvas.height;
-                        const sc = document.createElement('canvas');
-                        sc.width = canvas.width;
-                        sc.height = sph;
+                    let rem=imgH, sy=0;
+                    while(rem>0){
+                        if(sy>0) pdf.addPage();
+                        const sh=Math.min(pch,rem), spy=(sy/imgH)*canvas.height, sph=(sh/imgH)*canvas.height;
+                        const sc=document.createElement('canvas'); sc.width=canvas.width; sc.height=sph;
                         sc.getContext('2d').drawImage(canvas,0,spy,canvas.width,sph,0,0,canvas.width,sph);
-                        pdf.addImage(sc.toDataURL('image/png'),'PNG',margin,margin,imgW,sh);
-                        sy += sh;
-                        rem -= sh;
+                        pdf.addImage(sc.toDataURL('image/png'),'PNG',mg,mg,imgW,sh);
+                        sy+=sh; rem-=sh;
                     }
                 }
-
-                // Create blob
-                currentPdfBlob = pdf.output('blob');
-                currentPdfFileName = docNum + '.pdf';
-
-                // Hide loading
+                currentPdfBlob=pdf.output('blob');
+                currentPdfFileName=docNum+'.pdf';
                 document.getElementById('loadingOverlay').classList.remove('active');
-
-                if (isMobile()) {
-                    // Mobile: show options modal
-                    showPdfModal(currentPdfFileName);
-                } else {
-                    // Desktop: direct save
-                    pdf.save(currentPdfFileName);
-                    showToast('PDF สร้างเรียบร้อย!','success');
-                }
-
-            } catch (err) {
+                if(isMobile()){ showPdfModal(currentPdfFileName); }
+                else { pdf.save(currentPdfFileName); showToast('PDF สร้างเรียบร้อย!','success'); }
+            } catch(err){
                 document.getElementById('loadingOverlay').classList.remove('active');
                 showToast('เกิดข้อผิดพลาด: '+err.message,'error');
-                console.error(err);
             }
-
             clearBtns.forEach(b=>b.style.display='');
         }
 
-        // ============ PDF Modal (มือถือ) ============
-        function showPdfModal(fileName) {
-            document.getElementById('pdfFileName').textContent = fileName;
-
-            // Show share button if Web Share API available
-            const shareBtn = document.getElementById('pdfShareBtn');
-            if (canShare()) {
-                shareBtn.style.display = 'flex';
-            } else {
-                shareBtn.style.display = 'none';
-            }
-
+        // ============ PDF Modal ============
+        function showPdfModal(fn) {
+            document.getElementById('pdfFileName').textContent=fn;
+            document.getElementById('pdfShareBtn').style.display=canShare()?'flex':'none';
             document.getElementById('pdfModal').classList.add('active');
         }
+        function closePdfModal() { document.getElementById('pdfModal').classList.remove('active'); }
 
-        function closePdfModal() {
-            document.getElementById('pdfModal').classList.remove('active');
-        }
-
-        // Download PDF
         function pdfDownload() {
-            if (!currentPdfBlob) return;
+            if(!currentPdfBlob) return;
             try {
-                // Method 1: Create download link
-                const url = URL.createObjectURL(currentPdfBlob);
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = currentPdfFileName;
-                a.style.display = 'none';
-                document.body.appendChild(a);
-                a.click();
-                
-                setTimeout(() => {
-                    document.body.removeChild(a);
-                    URL.revokeObjectURL(url);
-                }, 1000);
-
-                showToast('กำลังดาวน์โหลด...','success');
-                closePdfModal();
-            } catch(e) {
-                // Fallback: open in new tab
-                pdfPreview();
-            }
+                const url=URL.createObjectURL(currentPdfBlob);
+                const a=document.createElement('a'); a.href=url; a.download=currentPdfFileName; a.style.display='none';
+                document.body.appendChild(a); a.click();
+                setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},1000);
+                showToast('กำลังดาวน์โหลด...','success'); closePdfModal();
+            } catch(e){ pdfPreview(); }
         }
-
-        // Share PDF (Web Share API)
         async function pdfShare() {
-            if (!currentPdfBlob) return;
+            if(!currentPdfBlob) return;
             try {
-                const file = new File([currentPdfBlob], currentPdfFileName, { type: 'application/pdf' });
-                
-                if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                    await navigator.share({
-                        title: 'Service Report',
-                        text: 'Service Report: ' + currentPdfFileName,
-                        files: [file]
-                    });
-                    showToast('แชร์เรียบร้อย!','success');
-                    closePdfModal();
-                } else {
-                    // Fallback to download
-                    pdfDownload();
-                }
-            } catch(e) {
-                if (e.name !== 'AbortError') {
-                    showToast('ไม่สามารถแชร์ได้ ลองดาวน์โหลดแทน','error');
-                }
-            }
+                const file=new File([currentPdfBlob],currentPdfFileName,{type:'application/pdf'});
+                if(navigator.canShare&&navigator.canShare({files:[file]})){
+                    await navigator.share({title:'Service Report',text:currentPdfFileName,files:[file]});
+                    showToast('แชร์เรียบร้อย!','success'); closePdfModal();
+                } else { pdfDownload(); }
+            } catch(e){ if(e.name!=='AbortError') showToast('ลองดาวน์โหลดแทน','error'); }
         }
-
-        // Preview PDF in new tab
         function pdfPreview() {
-            if (!currentPdfBlob) return;
+            if(!currentPdfBlob) return;
             try {
-                const url = URL.createObjectURL(currentPdfBlob);
-                const newWindow = window.open(url, '_blank');
-                
-                if (!newWindow || newWindow.closed) {
-                    // Popup blocked - use iframe approach
-                    const link = document.createElement('a');
-                    link.href = url;
-                    link.target = '_blank';
-                    link.rel = 'noopener';
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                }
-                
-                setTimeout(() => URL.revokeObjectURL(url), 60000);
-                showToast('กำลังเปิด PDF...','info');
-                closePdfModal();
-            } catch(e) {
-                showToast('ไม่สามารถเปิดได้ ลองดาวน์โหลดแทน','error');
-            }
+                const url=URL.createObjectURL(currentPdfBlob);
+                const w=window.open(url,'_blank');
+                if(!w){ const a=document.createElement('a'); a.href=url; a.target='_blank'; document.body.appendChild(a); a.click(); document.body.removeChild(a); }
+                setTimeout(()=>URL.revokeObjectURL(url),60000);
+                showToast('กำลังเปิด PDF...','info'); closePdfModal();
+            } catch(e){ showToast('ลองดาวน์โหลดแทน','error'); }
         }
 
-        // ============ Document List ============
+        // ============ Doc List ============
         function showDocList() {
-            let docs = JSON.parse(localStorage.getItem('serviceReports')||'[]');
-            const c = document.getElementById('docListContent');
-            if (!docs.length) {
-                c.innerHTML = '<div class="no-docs">📭 ยังไม่มีเอกสาร</div>';
-            } else {
+            let docs=JSON.parse(localStorage.getItem('serviceReports')||'[]');
+            const c=document.getElementById('docListContent');
+            if(!docs.length){ c.innerHTML='<div class="no-docs">📭 ยังไม่มีเอกสาร</div>'; }
+            else {
                 docs.sort((a,b)=>b.savedAt.localeCompare(a.savedAt));
-                let h = '<table class="doc-list-table"><thead><tr><th>เลขที่</th><th>ลูกค้า</th><th>วันที่</th><th>สถานะ</th><th>จัดการ</th></tr></thead><tbody>';
-                docs.forEach(d => {
-                    const sc = d.status==='Close'?'status-close':'status-pending';
-                    const sd = d.savedAt ? new Date(d.savedAt).toLocaleDateString('th-TH') : '-';
-                    h += '<tr><td><strong>'+d.docNumber+'</strong></td><td>'+(d.customerName||'-')+'</td><td>'+sd+'</td>';
-                    h += '<td><span class="status-badge '+sc+'">'+(d.status||'Pending')+'</span></td>';
-                    h += '<td><button class="btn-load" onclick="loadReport(\''+d.docNumber+'\')">📂</button>';
-                    h += '<button class="btn-delete" onclick="deleteReport(\''+d.docNumber+'\')">🗑️</button></td></tr>';
+                let h='<table class="doc-list-table"><thead><tr><th>เลขที่</th><th>ลูกค้า</th><th>วันที่</th><th>สถานะ</th><th>จัดการ</th></tr></thead><tbody>';
+                docs.forEach(d=>{
+                    const sc=d.status==='Close'?'status-close':'status-pending';
+                    const sd=d.savedAt?new Date(d.savedAt).toLocaleDateString('th-TH'):'-';
+                    h+='<tr><td><strong>'+d.docNumber+'</strong></td><td>'+(d.customerName||'-')+'</td><td>'+sd+'</td>';
+                    h+='<td><span class="status-badge '+sc+'">'+(d.status||'Pending')+'</span></td>';
+                    h+='<td><button class="btn-load" onclick="loadReport(\''+d.docNumber+'\')">📂</button>';
+                    h+='<button class="btn-delete" onclick="deleteReport(\''+d.docNumber+'\')">🗑️</button></td></tr>';
                 });
-                h += '</tbody></table>';
-                c.innerHTML = h;
+                h+='</tbody></table>'; c.innerHTML=h;
             }
             document.getElementById('docListModal').classList.add('active');
         }
-
-        function closeDocList() {
-            document.getElementById('docListModal').classList.remove('active');
-        }
-
-        function loadReport(num) {
-            const docs = JSON.parse(localStorage.getItem('serviceReports')||'[]');
-            const doc = docs.find(d=>d.docNumber===num);
-            if (doc) {
-                loadFormData(doc);
-                closeDocList();
-                showToast('โหลดเอกสาร '+num,'success');
-            }
-        }
-
-        function deleteReport(num) {
-            if (!confirm('ลบเอกสาร '+num+'?')) return;
-            let docs = JSON.parse(localStorage.getItem('serviceReports')||'[]');
-            docs = docs.filter(d=>d.docNumber!==num);
-            localStorage.setItem('serviceReports', JSON.stringify(docs));
-            showDocList();
-            showToast('ลบแล้ว','info');
-        }
+        function closeDocList(){ document.getElementById('docListModal').classList.remove('active'); }
+        function loadReport(n){ const docs=JSON.parse(localStorage.getItem('serviceReports')||'[]'); const d=docs.find(x=>x.docNumber===n); if(d){loadFormData(d);closeDocList();showToast('โหลด '+n,'success');} }
+        function deleteReport(n){ if(!confirm('ลบ '+n+'?'))return; let docs=JSON.parse(localStorage.getItem('serviceReports')||'[]'); docs=docs.filter(x=>x.docNumber!==n); localStorage.setItem('serviceReports',JSON.stringify(docs)); showDocList(); showToast('ลบแล้ว','info'); }
 
         // ============ Toast ============
-        function showToast(msg, type) {
-            const t = document.getElementById('toast');
-            t.textContent = msg;
-            t.className = 'toast toast-'+type+' show';
-            setTimeout(()=>t.classList.remove('show'), 3000);
-        }
+        function showToast(m,t){ const e=document.getElementById('toast'); e.textContent=m; e.className='toast toast-'+t+' show'; setTimeout(()=>e.classList.remove('show'),3000); }
 
-        // ============ Modal close on backdrop ============
-        document.getElementById('docListModal').addEventListener('click', function(e) {
-            if (e.target === this) closeDocList();
-        });
-        document.getElementById('pdfModal').addEventListener('click', function(e) {
-            if (e.target === this) closePdfModal();
-        });
+        // ============ Modal backdrop ============
+        document.getElementById('docListModal').addEventListener('click',function(e){if(e.target===this)closeDocList();});
+        document.getElementById('pdfModal').addEventListener('click',function(e){if(e.target===this)closePdfModal();});
 
         // ============ Init ============
-        window.addEventListener('load', function() {
-            const today = new Date().toISOString().split('T')[0];
-            document.getElementById('requestDate').value = today;
-            document.getElementById('serviceDate').value = today;
-        });
+        window.addEventListener('load',function(){ const t=new Date().toISOString().split('T')[0]; document.getElementById('requestDate').value=t; document.getElementById('serviceDate').value=t; });
     </script>
 
 </body>
