@@ -1,1221 +1,1210 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Service Report System - MFEC</title>
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            font-family: 'Sarabun', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f0f2f5;
-            color: #333;
-            font-size: 14px;
-        }
-        /* Top Navigation */
-        .top-nav {
-            background: linear-gradient(135deg, #1a237e, #283593);
-            color: white;
-            padding: 12px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-        .top-nav h1 {
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .nav-buttons {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-        .nav-btn {
-            padding: 9px 16px;
-            border: none;
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            transition: all 0.3s;
-            font-family: 'Sarabun', sans-serif;
-        }
-        .btn-new { background: #4CAF50; color: white; }
-        .btn-new:hover { background: #388E3C; }
-        .btn-save { background: #2196F3; color: white; }
-        .btn-save:hover { background: #1565C0; }
-        .btn-pdf { background: #f44336; color: white; }
-        .btn-pdf:hover { background: #c62828; }
-        .btn-list { background: #FF9800; color: white; }
-        .btn-list:hover { background: #e65100; }
-        /* Main Container */
-        .main-container {
-            max-width: 900px;
-            margin: 20px auto;
-            padding: 0 15px;
-        }
-        /* Report Page */
-        .report-page {
-            background: white;
-            padding: 35px 40px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
-            border-radius: 4px;
-        }
-        /* ============ HEADER ============ */
-        .report-header {
-            display: flex;
-            align-items: stretch;
-            margin-bottom: 25px;
-            border: 2px solid #333;
-            min-height: 80px;
-        }
-        .header-logo {
-            flex: 0 0 160px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 10px 12px;
-            border-right: 2px solid #333;
-        }
-        .header-logo img {
-            max-width: 140px;
-            max-height: 55px;
-            object-fit: contain;
-        }
-        .header-title {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 10px 15px;
-            border-right: 2px solid #333;
-        }
-        .header-title h2 {
-            font-size: 26px;
-            font-weight: 800;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: #1a237e;
-        }
-        /* ===== No. ช่องกว้างขึ้น 240px ===== */
-        .header-docinfo {
-            flex: 0 0 240px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 10px 15px;
-        }
-        .doc-no-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            white-space: nowrap;
-        }
-        .doc-label-no {
-            font-weight: 700;
-            font-size: 20px;
-            white-space: nowrap;
-            line-height: 1;
-        }
-        .doc-value {
-            font-weight: 700;
-            font-size: 16px;
-            color: #d32f2f;
-            font-family: 'Courier New', monospace;
-            letter-spacing: 0.5px;
-            line-height: 1;
-            white-space: nowrap;
-        }
-        /* ============ FORM ============ */
-        .form-row {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 14px;
-            align-items: baseline;
-        }
-        .form-group {
-            display: flex;
-            align-items: baseline;
-            gap: 10px;
-            flex: 1;
-            min-width: 200px;
-        }
-        .form-group label {
-            font-weight: 700;
-            font-size: 14px;
-            white-space: nowrap;
-            min-width: fit-content;
-            color: #333;
-        }
-        .form-group input[type="text"],
-        .form-group input[type="date"],
-        .form-group input[type="time"],
-        .form-group input[type="number"] {
-            flex: 1;
-            padding: 4px 2px;
-            border: none;
-            border-bottom: 1.5px solid #888;
-            font-size: 14px;
-            font-family: 'Sarabun', sans-serif;
-            outline: none;
-            background: transparent;
-            min-width: 80px;
-        }
-        .form-group input:focus {
-            border-bottom-color: #1a237e;
-            border-bottom-width: 2px;
-        }
-        .form-group textarea {
-            flex: 1;
-            padding: 8px 10px;
-            border: 1px solid #ccc;
-            font-size: 14px;
-            font-family: 'Sarabun', sans-serif;
-            outline: none;
-            resize: vertical;
-            border-radius: 3px;
-            min-height: 80px;
-        }
-        .form-group textarea:focus {
-            border-color: #1a237e;
-        }
-        /* Service Time Row */
-        .service-time-row {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 14px;
-            align-items: baseline;
-            flex-wrap: nowrap;
-        }
-        .time-group {
-            display: flex;
-            align-items: baseline;
-            gap: 5px;
-            white-space: nowrap;
-        }
-        .time-group label {
-            font-weight: 700;
-            font-size: 13px;
-        }
-        .time-group input {
-            padding: 4px 2px;
-            border: none;
-            border-bottom: 1.5px solid #888;
-            font-size: 13px;
-            font-family: 'Sarabun', sans-serif;
-            outline: none;
-            background: transparent;
-        }
-        .time-group input:focus {
-            border-bottom-color: #1a237e;
-            border-bottom-width: 2px;
-        }
-        .time-group input[type="date"] { width: 130px; }
-        .time-group input[type="time"] { width: 95px; }
-        .time-group .total-time-display {
-            padding: 4px 8px;
-            border: none;
-            border-bottom: 1.5px solid #888;
-            font-size: 13px;
-            font-family: 'Sarabun', sans-serif;
-            outline: none;
-            background: #f5f5f5;
-            min-width: 100px;
-            color: #1a237e;
-            font-weight: 600;
-        }
-        .divider {
-            border: none;
-            border-top: 1.5px dashed #999;
-            margin: 15px 0;
-        }
-        /* Radio Groups */
-        .radio-group {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-            flex-wrap: wrap;
-            margin-bottom: 14px;
-        }
-        .radio-group label {
-            font-weight: 600;
-            font-size: 13px;
-            margin-right: 5px;
-        }
-        .radio-item {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-            font-size: 13px;
-            cursor: pointer;
-        }
-        .radio-item input[type="radio"],
-        .radio-item input[type="checkbox"] {
-            cursor: pointer;
-            accent-color: #1a237e;
-        }
-        /* Parts Table */
-        .parts-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 10px 0;
-            font-size: 13px;
-        }
-        .parts-table th, .parts-table td {
-            border: 1.5px solid #333;
-            padding: 6px 8px;
-            text-align: left;
-        }
-        .parts-table th {
-            background: #f5f5f5;
-            font-weight: 700;
-            font-size: 12px;
-        }
-        .parts-table input {
-            width: 100%;
-            border: none;
-            outline: none;
-            font-size: 13px;
-            font-family: 'Sarabun', sans-serif;
-            padding: 2px;
-            background: transparent;
-        }
-        /* Bottom Section */
-        .bottom-section {
-            display: flex;
-            gap: 0;
-            margin-top: 10px;
-        }
-        /* Charge Table */
-        .charge-table {
-            border-collapse: collapse;
-            font-size: 13px;
-            flex: 0 0 220px;
-        }
-        .charge-table td {
-            border: 1.5px solid #333;
-            padding: 8px 10px;
-            text-align: left;
-            vertical-align: middle;
-        }
-        .charge-td-label {
-            font-weight: 700;
-            font-size: 12px;
-            width: 110px;
-            line-height: 1.4;
-        }
-        .charge-td-value { width: 110px; }
-        .charge-td-value input {
-            width: 100%;
-            border: none;
-            outline: none;
-            font-size: 13px;
-            font-family: 'Sarabun', sans-serif;
-            padding: 2px;
-            background: transparent;
-        }
-        .charge-td-value-total {
-            width: 110px;
-            background: #f5f5f5;
-        }
-        .charge-td-value-total input {
-            width: 100%;
-            border: none;
-            outline: none;
-            font-size: 13px;
-            font-family: 'Sarabun', sans-serif;
-            font-weight: 700;
-            padding: 2px;
-            background: transparent;
-        }
-        .charge-row-spacer td {
-            border-left: 1.5px solid #333;
-            border-right: 1.5px solid #333;
-            border-top: none;
-            border-bottom: none;
-            padding: 5px;
-        }
-        /* Signature */
-        .signature-section {
-            display: flex;
-            gap: 0;
-            flex: 1;
-        }
-        .signature-box {
-            flex: 1;
-            border: 1.5px solid #333;
-            padding: 8px;
-            text-align: center;
-            display: flex;
-            flex-direction: column;
-            min-height: 120px;
-        }
-        .signature-box .sig-label {
-            font-weight: 700;
-            font-size: 12px;
-            margin-bottom: 5px;
-            background: #f5f5f5;
-            padding: 3px;
-            margin: -8px -8px 5px -8px;
-            border-bottom: 1.5px solid #333;
-        }
-        .sig-canvas-wrap {
-            flex: 1;
-            position: relative;
-            cursor: crosshair;
-            min-height: 60px;
-        }
-        .sig-canvas {
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            top: 0; left: 0;
-            border-radius: 2px;
-        }
-        .sig-name-input {
-            border: none;
-            border-top: 1px solid #999;
-            text-align: center;
-            font-size: 13px;
-            font-family: 'Sarabun', sans-serif;
-            padding: 3px;
-            outline: none;
-            margin-top: 5px;
-            width: 100%;
-        }
-        .sig-label-bottom {
-            font-size: 11px;
-            color: #666;
-            margin-top: 2px;
-        }
-        .clear-sig {
-            font-size: 10px;
-            color: #f44336;
-            cursor: pointer;
-            text-decoration: underline;
-            margin-top: 3px;
-        }
-        /* Full-width textarea */
-        .full-width-group {
-            margin-bottom: 14px;
-        }
-        .full-width-group label {
-            font-weight: 700;
-            font-size: 14px;
-            display: block;
-            margin-bottom: 5px;
-        }
-        .full-width-group textarea {
-            width: 100%;
-            padding: 8px 10px;
-            border: 1px solid #ccc;
-            font-size: 14px;
-            font-family: 'Sarabun', sans-serif;
-            outline: none;
-            resize: vertical;
-            border-radius: 3px;
-        }
-        .full-width-group textarea:focus {
-            border-color: #1a237e;
-        }
-        /* ============ PDF MODAL ============ */
-        .pdf-modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 5000;
-            justify-content: center;
-            align-items: center;
-            padding: 15px;
-        }
-        .pdf-modal-overlay.active { display: flex; }
-        .pdf-modal-content {
-            background: white;
-            border-radius: 16px;
-            padding: 25px;
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-        }
-        .pdf-modal-content h3 {
-            color: #1a237e;
-            margin-bottom: 15px;
-            font-size: 18px;
-        }
-        .pdf-modal-content p {
-            color: #666;
-            margin-bottom: 20px;
-            font-size: 14px;
-            line-height: 1.6;
-        }
-        .pdf-modal-buttons {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        .pdf-action-btn {
-            padding: 14px 20px;
-            border: none;
-            border-radius: 10px;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-            font-family: 'Sarabun', sans-serif;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            transition: all 0.2s;
-        }
-        .pdf-btn-download { background: #f44336; color: white; }
-        .pdf-btn-share { background: #4CAF50; color: white; }
-        .pdf-btn-preview { background: #2196F3; color: white; }
-        .pdf-btn-close { background: #eee; color: #333; }
-        /* Loading */
-        .loading-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.6);
-            z-index: 6000;
-            justify-content: center;
-            align-items: center;
-        }
-        .loading-overlay.active { display: flex; }
-        .loading-spinner {
-            background: white;
-            border-radius: 16px;
-            padding: 30px 40px;
-            text-align: center;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-        }
-        .loading-spinner .spinner {
-            width: 50px; height: 50px;
-            border: 5px solid #eee;
-            border-top: 5px solid #1a237e;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin: 0 auto 15px auto;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .loading-spinner p { color: #333; font-weight: 600; font-size: 15px; }
-        /* Doc List Modal */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 2000;
-            justify-content: center;
-            align-items: flex-start;
-            padding-top: 50px;
-        }
-        .modal-overlay.active { display: flex; }
-        .modal-content {
-            background: white;
-            border-radius: 12px;
-            padding: 30px;
-            width: 90%;
-            max-width: 800px;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        }
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .modal-header h2 { color: #1a237e; }
-        .modal-close {
-            background: #f44336; color: white;
-            border: none; border-radius: 50%;
-            width: 35px; height: 35px;
-            font-size: 18px; cursor: pointer;
-            display: flex; align-items: center; justify-content: center;
-        }
-        .doc-list-table { width: 100%; border-collapse: collapse; }
-        .doc-list-table th, .doc-list-table td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: left;
-            font-size: 13px;
-        }
-        .doc-list-table th { background: #1a237e; color: white; }
-        .doc-list-table tr:nth-child(even) { background: #f5f5f5; }
-        .doc-list-table tr:hover { background: #e3f2fd; }
-        .btn-load {
-            background: #2196F3; color: white;
-            border: none; padding: 5px 12px;
-            border-radius: 4px; cursor: pointer; font-size: 12px;
-        }
-        .btn-delete {
-            background: #f44336; color: white;
-            border: none; padding: 5px 12px;
-            border-radius: 4px; cursor: pointer; font-size: 12px;
-            margin-left: 5px;
-        }
-        .no-docs { text-align: center; padding: 40px; color: #999; font-size: 16px; }
-        /* Toast */
-        .toast {
-            position: fixed;
-            top: 70px; right: 15px;
-            padding: 12px 20px;
-            border-radius: 8px;
-            color: white;
-            font-weight: 600;
-            z-index: 3000;
-            transform: translateX(400px);
-            transition: transform 0.3s ease;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-            font-size: 13px;
-            max-width: 300px;
-        }
-        .toast.show { transform: translateX(0); }
-        .toast-success { background: #4CAF50; }
-        .toast-error { background: #f44336; }
-        .toast-info { background: #2196F3; }
-        .status-badge {
-            padding: 3px 10px;
-            border-radius: 12px;
-            font-size: 11px;
-            font-weight: 700;
-            display: inline-block;
-        }
-        .status-close { background: #e8f5e9; color: #2e7d32; }
-        .status-pending { background: #fff3e0; color: #e65100; }
-        /* ============ RESPONSIVE ============ */
-        @media (max-width: 768px) {
-            .top-nav {
-                flex-direction: column;
-                gap: 8px;
-                padding: 10px 15px;
-            }
-            .top-nav h1 { font-size: 16px; }
-            .nav-buttons { width: 100%; justify-content: center; }
-            .nav-btn {
-                padding: 8px 12px;
-                font-size: 12px;
-                flex: 1;
-                justify-content: center;
-            }
-            .report-page { padding: 20px 15px; }
-            .report-header { flex-direction: column; }
-            .header-logo {
-                border-right: none;
-                border-bottom: 2px solid #333;
-                flex: none;
-                padding: 8px;
-            }
-            .header-title {
-                border-right: none;
-                border-bottom: 2px solid #333;
-                padding: 8px;
-            }
-            .header-title h2 { font-size: 20px; letter-spacing: 2px; }
-            .header-docinfo {
-                flex: none;
-                padding: 8px 15px;
-                width: 100%;
-                justify-content: center;
-            }
-            .form-row { flex-direction: column; gap: 8px; }
-            .form-group { min-width: 100%; }
-            .service-time-row { flex-wrap: wrap; gap: 8px; }
-            .time-group { flex: 1; min-width: 45%; }
-            .radio-group { gap: 8px; }
-            .bottom-section { flex-direction: column; }
-            .charge-table { flex: none; width: 100%; }
-            .signature-section { flex-direction: column; }
-            .parts-table { font-size: 11px; }
-            .parts-table th, .parts-table td { padding: 4px 5px; }
-        }
-        @media print {
-            .top-nav, .nav-buttons, .clear-sig,
-            .modal-overlay, .toast, .pdf-modal-overlay,
-            .loading-overlay {
-                display: none !important;
-            }
-            .main-container { margin: 0; padding: 0; }
-            .report-page { box-shadow: none; padding: 20px; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Service Report System - MFEC</title>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+body {
+font-family: 'Sarabun', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+background: #f0f2f5;
+color: #333;
+font-size: 14px;
+}
+/* Top Navigation */
+.top-nav {
+background: linear-gradient(135deg, #1a237e, #283593);
+color: white;
+padding: 12px 20px;
+display: flex;
+justify-content: space-between;
+align-items: center;
+box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+position: sticky;
+top: 0;
+z-index: 1000;
+}
+.top-nav h1 {
+font-size: 18px;
+display: flex;
+align-items: center;
+gap: 8px;
+}
+.nav-buttons {
+display: flex;
+gap: 8px;
+flex-wrap: wrap;
+}
+.nav-btn {
+padding: 9px 16px;
+border: none;
+border-radius: 8px;
+font-size: 13px;
+font-weight: 600;
+cursor: pointer;
+display: flex;
+align-items: center;
+gap: 5px;
+transition: all 0.3s;
+font-family: 'Sarabun', sans-serif;
+}
+.btn-new { background: #4CAF50; color: white; }
+.btn-new:hover { background: #388E3C; }
+.btn-save { background: #2196F3; color: white; }
+.btn-save:hover { background: #1565C0; }
+.btn-pdf { background: #f44336; color: white; }
+.btn-pdf:hover { background: #c62828; }
+.btn-list { background: #FF9800; color: white; }
+.btn-list:hover { background: #e65100; }
+/* Main Container */
+.main-container {
+max-width: 900px;
+margin: 20px auto;
+padding: 0 15px;
+}
+/* Report Page */
+.report-page {
+background: white;
+padding: 35px 40px;
+box-shadow: 0 0 20px rgba(0,0,0,0.1);
+border-radius: 4px;
+}
+/* ============ HEADER ============ */
+.report-header {
+display: flex;
+align-items: stretch;
+margin-bottom: 25px;
+border: 2px solid #333;
+min-height: 80px;
+}
+.header-logo {
+flex: 0 0 160px;
+display: flex;
+align-items: center;
+justify-content: center;
+padding: 10px 12px;
+border-right: 2px solid #333;
+}
+.header-logo img {
+max-width: 140px;
+max-height: 55px;
+object-fit: contain;
+}
+.header-title {
+flex: 1;
+display: flex;
+align-items: center;
+justify-content: center;
+padding: 10px 15px;
+border-right: 2px solid #333;
+}
+.header-title h2 {
+font-size: 26px;
+font-weight: 800;
+letter-spacing: 3px;
+text-transform: uppercase;
+color: #1a237e;
+}
+/* ===== No. ช่องกว้างขึ้น 240px ===== */
+.header-docinfo {
+flex: 0 0 240px;
+display: flex;
+align-items: center;
+justify-content: center;
+padding: 10px 15px;
+}
+.doc-no-wrapper {
+display: flex;
+align-items: center;
+gap: 8px;
+white-space: nowrap;
+}
+.doc-label-no {
+font-weight: 700;
+font-size: 20px;
+white-space: nowrap;
+line-height: 1;
+}
+.doc-value {
+font-weight: 700;
+font-size: 16px;
+color: #d32f2f;
+font-family: 'Courier New', monospace;
+letter-spacing: 0.5px;
+line-height: 1;
+white-space: nowrap;
+}
+/* ============ FORM ============ */
+.form-row {
+display: flex;
+gap: 20px;
+margin-bottom: 14px;
+align-items: baseline;
+}
+.form-group {
+display: flex;
+align-items: baseline;
+gap: 10px;
+flex: 1;
+min-width: 200px;
+}
+.form-group label {
+font-weight: 700;
+font-size: 14px;
+white-space: nowrap;
+min-width: fit-content;
+color: #333;
+}
+.form-group input[type="text"],
+.form-group input[type="date"],
+.form-group input[type="time"],
+.form-group input[type="number"] {
+flex: 1;
+padding: 4px 2px;
+border: none;
+border-bottom: 1.5px solid #888;
+font-size: 14px;
+font-family: 'Sarabun', sans-serif;
+outline: none;
+background: transparent;
+min-width: 80px;
+}
+.form-group input:focus {
+border-bottom-color: #1a237e;
+border-bottom-width: 2px;
+}
+.form-group textarea {
+flex: 1;
+padding: 8px 10px;
+border: 1px solid #ccc;
+font-size: 14px;
+font-family: 'Sarabun', sans-serif;
+outline: none;
+resize: vertical;
+border-radius: 3px;
+min-height: 80px;
+}
+.form-group textarea:focus {
+border-color: #1a237e;
+}
+/* Service Time Row */
+.service-time-row {
+display: flex;
+gap: 10px;
+margin-bottom: 14px;
+align-items: baseline;
+flex-wrap: nowrap;
+}
+.time-group {
+display: flex;
+align-items: baseline;
+gap: 5px;
+white-space: nowrap;
+}
+.time-group label {
+font-weight: 700;
+font-size: 13px;
+}
+.time-group input {
+padding: 4px 2px;
+border: none;
+border-bottom: 1.5px solid #888;
+font-size: 13px;
+font-family: 'Sarabun', sans-serif;
+outline: none;
+background: transparent;
+}
+.time-group input:focus {
+border-bottom-color: #1a237e;
+border-bottom-width: 2px;
+}
+.time-group input[type="date"] { width: 130px; }
+.time-group input[type="time"] { width: 95px; }
+.time-group .total-time-display {
+padding: 4px 8px;
+border: none;
+border-bottom: 1.5px solid #888;
+font-size: 13px;
+font-family: 'Sarabun', sans-serif;
+outline: none;
+background: #f5f5f5;
+min-width: 100px;
+color: #1a237e;
+font-weight: 600;
+}
+.divider {
+border: none;
+border-top: 1.5px dashed #999;
+margin: 15px 0;
+}
+/* Radio Groups */
+.radio-group {
+display: flex;
+gap: 15px;
+align-items: center;
+flex-wrap: wrap;
+margin-bottom: 14px;
+}
+.radio-group label {
+font-weight: 600;
+font-size: 13px;
+margin-right: 5px;
+}
+.radio-item {
+display: flex;
+align-items: center;
+gap: 4px;
+font-size: 13px;
+cursor: pointer;
+}
+.radio-item input[type="radio"],
+.radio-item input[type="checkbox"] {
+cursor: pointer;
+accent-color: #1a237e;
+}
+/* Parts Table */
+.parts-table {
+width: 100%;
+border-collapse: collapse;
+margin: 10px 0;
+font-size: 13px;
+}
+.parts-table th, .parts-table td {
+border: 1.5px solid #333;
+padding: 6px 8px;
+text-align: left;
+}
+.parts-table th {
+background: #f5f5f5;
+font-weight: 700;
+font-size: 12px;
+}
+.parts-table input {
+width: 100%;
+border: none;
+outline: none;
+font-size: 13px;
+font-family: 'Sarabun', sans-serif;
+padding: 2px;
+background: transparent;
+}
+/* Bottom Section */
+.bottom-section {
+display: flex;
+gap: 0;
+margin-top: 10px;
+}
+/* Charge Table */
+.charge-table {
+border-collapse: collapse;
+font-size: 13px;
+flex: 0 0 220px;
+}
+.charge-table td {
+border: 1.5px solid #333;
+padding: 8px 10px;
+text-align: left;
+vertical-align: middle;
+}
+.charge-td-label {
+font-weight: 700;
+font-size: 12px;
+width: 110px;
+line-height: 1.4;
+}
+.charge-td-value { width: 110px; }
+.charge-td-value input {
+width: 100%;
+border: none;
+outline: none;
+font-size: 13px;
+font-family: 'Sarabun', sans-serif;
+padding: 2px;
+background: transparent;
+}
+.charge-td-value-total {
+width: 110px;
+background: #f5f5f5;
+}
+.charge-td-value-total input {
+width: 100%;
+border: none;
+outline: none;
+font-size: 13px;
+font-family: 'Sarabun', sans-serif;
+font-weight: 700;
+padding: 2px;
+background: transparent;
+}
+.charge-row-spacer td {
+border-left: 1.5px solid #333;
+border-right: 1.5px solid #333;
+border-top: none;
+border-bottom: none;
+padding: 5px;
+}
+/* Signature */
+.signature-section {
+display: flex;
+gap: 0;
+flex: 1;
+}
+.signature-box {
+flex: 1;
+border: 1.5px solid #333;
+padding: 8px;
+text-align: center;
+display: flex;
+flex-direction: column;
+min-height: 120px;
+}
+.signature-box .sig-label {
+font-weight: 700;
+font-size: 12px;
+margin-bottom: 5px;
+background: #f5f5f5;
+padding: 3px;
+margin: -8px -8px 5px -8px;
+border-bottom: 1.5px solid #333;
+}
+.sig-canvas-wrap {
+flex: 1;
+position: relative;
+cursor: crosshair;
+min-height: 60px;
+}
+.sig-canvas {
+width: 100%;
+height: 100%;
+position: absolute;
+top: 0; left: 0;
+border-radius: 2px;
+}
+.sig-name-input {
+border: none;
+border-top: 1px solid #999;
+text-align: center;
+font-size: 13px;
+font-family: 'Sarabun', sans-serif;
+padding: 3px;
+outline: none;
+margin-top: 5px;
+width: 100%;
+}
+.sig-label-bottom {
+font-size: 11px;
+color: #666;
+margin-top: 2px;
+}
+.clear-sig {
+font-size: 10px;
+color: #f44336;
+cursor: pointer;
+text-decoration: underline;
+margin-top: 3px;
+}
+/* Full-width textarea */
+.full-width-group {
+margin-bottom: 14px;
+}
+.full-width-group label {
+font-weight: 700;
+font-size: 14px;
+display: block;
+margin-bottom: 5px;
+}
+.full-width-group textarea {
+width: 100%;
+padding: 8px 10px;
+border: 1px solid #ccc;
+font-size: 14px;
+font-family: 'Sarabun', sans-serif;
+outline: none;
+resize: vertical;
+border-radius: 3px;
+}
+.full-width-group textarea:focus {
+border-color: #1a237e;
+}
+/* ============ PDF MODAL ============ */
+.pdf-modal-overlay {
+display: none;
+position: fixed;
+top: 0; left: 0;
+width: 100%; height: 100%;
+background: rgba(0,0,0,0.8);
+z-index: 5000;
+justify-content: center;
+align-items: center;
+padding: 15px;
+}
+.pdf-modal-overlay.active { display: flex; }
+.pdf-modal-content {
+background: white;
+border-radius: 16px;
+padding: 25px;
+width: 100%;
+max-width: 400px;
+text-align: center;
+box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+.pdf-modal-content h3 {
+color: #1a237e;
+margin-bottom: 15px;
+font-size: 18px;
+}
+.pdf-modal-content p {
+color: #666;
+margin-bottom: 20px;
+font-size: 14px;
+line-height: 1.6;
+}
+.pdf-modal-buttons {
+display: flex;
+flex-direction: column;
+gap: 10px;
+}
+.pdf-action-btn {
+padding: 14px 20px;
+border: none;
+border-radius: 10px;
+font-size: 15px;
+font-weight: 700;
+cursor: pointer;
+font-family: 'Sarabun', sans-serif;
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 8px;
+transition: all 0.2s;
+}
+.pdf-btn-download { background: #f44336; color: white; }
+.pdf-btn-share { background: #4CAF50; color: white; }
+.pdf-btn-preview { background: #2196F3; color: white; }
+.pdf-btn-close { background: #eee; color: #333; }
+/* Loading */
+.loading-overlay {
+display: none;
+position: fixed;
+top: 0; left: 0;
+width: 100%; height: 100%;
+background: rgba(0,0,0,0.6);
+z-index: 6000;
+justify-content: center;
+align-items: center;
+}
+.loading-overlay.active { display: flex; }
+.loading-spinner {
+background: white;
+border-radius: 16px;
+padding: 30px 40px;
+text-align: center;
+box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+}
+.loading-spinner .spinner {
+width: 50px; height: 50px;
+border: 5px solid #eee;
+border-top: 5px solid #1a237e;
+border-radius: 50%;
+animation: spin 0.8s linear infinite;
+margin: 0 auto 15px auto;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.loading-spinner p { color: #333; font-weight: 600; font-size: 15px; }
+/* Doc List Modal */
+.modal-overlay {
+display: none;
+position: fixed;
+top: 0; left: 0;
+width: 100%; height: 100%;
+background: rgba(0,0,0,0.5);
+z-index: 2000;
+justify-content: center;
+align-items: flex-start;
+padding-top: 50px;
+}
+.modal-overlay.active { display: flex; }
+.modal-content {
+background: white;
+border-radius: 12px;
+padding: 30px;
+width: 90%;
+max-width: 800px;
+max-height: 80vh;
+overflow-y: auto;
+box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+}
+.modal-header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 20px;
+}
+.modal-header h2 { color: #1a237e; }
+.modal-close {
+background: #f44336; color: white;
+border: none; border-radius: 50%;
+width: 35px; height: 35px;
+font-size: 18px; cursor: pointer;
+display: flex; align-items: center; justify-content: center;
+}
+.doc-list-table { width: 100%; border-collapse: collapse; }
+.doc-list-table th, .doc-list-table td {
+border: 1px solid #ddd;
+padding: 10px;
+text-align: left;
+font-size: 13px;
+}
+.doc-list-table th { background: #1a237e; color: white; }
+.doc-list-table tr:nth-child(even) { background: #f5f5f5; }
+.doc-list-table tr:hover { background: #e3f2fd; }
+.btn-load {
+background: #2196F3; color: white;
+border: none; padding: 5px 12px;
+border-radius: 4px; cursor: pointer; font-size: 12px;
+}
+.btn-delete {
+background: #f44336; color: white;
+border: none; padding: 5px 12px;
+border-radius: 4px; cursor: pointer; font-size: 12px;
+margin-left: 5px;
+}
+.no-docs { text-align: center; padding: 40px; color: #999; font-size: 16px; }
+/* Toast */
+.toast {
+position: fixed;
+top: 70px; right: 15px;
+padding: 12px 20px;
+border-radius: 8px;
+color: white;
+font-weight: 600;
+z-index: 3000;
+transform: translateX(400px);
+transition: transform 0.3s ease;
+box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+font-size: 13px;
+max-width: 300px;
+}
+.toast.show { transform: translateX(0); }
+.toast-success { background: #4CAF50; }
+.toast-error { background: #f44336; }
+.toast-info { background: #2196F3; }
+.status-badge {
+padding: 3px 10px;
+border-radius: 12px;
+font-size: 11px;
+font-weight: 700;
+display: inline-block;
+}
+.status-close { background: #e8f5e9; color: #2e7d32; }
+.status-pending { background: #fff3e0; color: #e65100; }
+/* ============ RESPONSIVE ============ */
+@media (max-width: 768px) {
+.top-nav {
+flex-direction: column;
+gap: 8px;
+padding: 10px 15px;
+}
+.top-nav h1 { font-size: 16px; }
+.nav-buttons { width: 100%; justify-content: center; }
+.nav-btn {
+padding: 8px 12px;
+font-size: 12px;
+flex: 1;
+justify-content: center;
+}
+.report-page { padding: 20px 15px; }
+.report-header { flex-direction: column; }
+.header-logo {
+border-right: none;
+border-bottom: 2px solid #333;
+flex: none;
+padding: 8px;
+}
+.header-title {
+border-right: none;
+border-bottom: 2px solid #333;
+padding: 8px;
+}
+.header-title h2 { font-size: 20px; letter-spacing: 2px; }
+.header-docinfo {
+flex: none;
+padding: 8px 15px;
+width: 100%;
+justify-content: center;
+}
+.form-row { flex-direction: column; gap: 8px; }
+.form-group { min-width: 100%; }
+.service-time-row { flex-wrap: wrap; gap: 8px; }
+.time-group { flex: 1; min-width: 45%; }
+.radio-group { gap: 8px; }
+.bottom-section { flex-direction: column; }
+.charge-table { flex: none; width: 100%; }
+.signature-section { flex-direction: column; }
+.parts-table { font-size: 11px; }
+.parts-table th, .parts-table td { padding: 4px 5px; }
+}
+@media print {
+.top-nav, .nav-buttons, .clear-sig,
+.modal-overlay, .toast, .pdf-modal-overlay,
+.loading-overlay {
+display: none !important;
+}
+.main-container { margin: 0; padding: 0; }
+.report-page { box-shadow: none; padding: 20px; }
+}
+</style>
 </head>
 <body>
-    <!-- Top Navigation -->
-    <div class="top-nav" id="topNav">
-        <h1>🔧 MFEC Service Report</h1>
-        <div class="nav-buttons">
-            <button class="nav-btn btn-new" onclick="newReport()">📄 New</button>
-            <button class="nav-btn btn-save" onclick="saveReport()">💾 Save</button>
-            <button class="nav-btn btn-pdf" onclick="exportPDF()">📥 PDF</button>
-            <button class="nav-btn btn-list" onclick="showDocList()">📋 List</button>
-        </div>
-    </div>
-    <!-- Main Content -->
-    <div class="main-container">
-        <div class="report-page" id="reportPage">
-            <!-- Header -->
-            <div class="report-header">
-                <div class="header-logo">
-                    <!-- MFEC Logo - SVG version matching the brand logo -->
-                    <svg viewBox="0 0 320 90" style="max-width:145px;max-height:58px;" xmlns="http://www.w3.org/2000/svg">
-                        <!-- Letter M -->
-                        <path d="M0,80 L0,12 L12,12 L12,12 L30,52 L48,12 L60,12 L60,80 L50,80 L50,28 L32,68 L28,68 L10,28 L10,80 Z" fill="#3d4f5f"/>
-                        <!-- Blue chevron arrows above F -->
-                        <path d="M88,20 L96,10 L104,20" stroke="#1565C0" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                        <path d="M100,16 L108,6 L116,16" stroke="#42a5f5" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                        <!-- Letter F -->
-                        <path d="M78,80 L78,22 L122,22 L122,32 L90,32 L90,48 L116,48 L116,58 L90,58 L90,80 Z" fill="#3d4f5f"/>
-                        <!-- Letter E -->
-                        <path d="M135,80 L135,12 L182,12 L182,22 L147,22 L147,40 L176,40 L176,50 L147,50 L147,70 L184,70 L184,80 Z" fill="#3d4f5f"/>
-                        <!-- Letter C -->
-                        <path d="M230,12 L260,12 L280,12 L280,22 L230,22 Q205,22 205,46 Q205,70 230,70 L280,70 L280,80 L230,80 Q192,80 192,46 Q192,12 230,12 Z" fill="#3d4f5f"/>
-                    </svg>
-                </div>
-                <div class="header-title">
-                    <h2>Service Report</h2>
-                </div>
-                <div class="header-docinfo">
-                    <div class="doc-no-wrapper">
-                        <span class="doc-label-no">No.</span>
-                        <span class="doc-value" id="docNumber">-NEW-</span>
-                    </div>
-                </div>
-            </div>
-            <!-- Customer Info -->
-            <div class="form-row">
-                <div class="form-group" style="flex:2.5">
-                    <label>Customer Name</label>
-                    <input type="text" id="customerName">
-                </div>
-                <div class="form-group" style="flex:1">
-                    <label>Project No.</label>
-                    <input type="text" id="projectNo">
-                </div>
-            </div>
-            <div class="form-row">
-                <div class="form-group" style="flex:2.5">
-                    <label>Address</label>
-                    <input type="text" id="address">
-                </div>
-                <div class="form-group" style="flex:1">
-                    <label>Tel.</label>
-                    <input type="text" id="tel">
-                </div>
-            </div>
-            <!-- Service Type -->
-            <div class="radio-group">
-                <label class="radio-item"><input type="radio" name="serviceType" value="Warranty"> Warranty</label>
-                <label class="radio-item"><input type="radio" name="serviceType" value="MA Control"> MA Control</label>
-                <label class="radio-item"><input type="radio" name="serviceType" value="Per Call"> Per Call</label>
-                <label class="radio-item"><input type="radio" name="serviceType" value="Demo"> Demo</label>
-                <label class="radio-item"><input type="radio" name="serviceType" value="Other"> Other</label>
-                <input type="text" id="serviceTypeOther" style="border:none;border-bottom:1px solid #888;width:100px;font-size:13px;outline:none;font-family:'Sarabun',sans-serif;">
-            </div>
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Request Date</label>
-                    <input type="date" id="requestDate">
-                </div>
-                <div class="form-group">
-                    <label>Time</label>
-                    <input type="time" id="requestTime">
-                </div>
-            </div>
-            <hr class="divider">
-            <!-- Problem Type -->
-            <div class="radio-group">
-                <label class="radio-item"><input type="radio" name="problemType" value="H/W Problem"> H/W Problem</label>
-                <label class="radio-item"><input type="radio" name="problemType" value="S/W Problem"> S/W Problem</label>
-                <label class="radio-item"><input type="radio" name="problemType" value="Install"> Install</label>
-                <label class="radio-item"><input type="radio" name="problemType" value="PM"> PM</label>
-                <label class="radio-item"><input type="radio" name="problemType" value="Other"> Other</label>
-                <input type="text" id="problemTypeOther" style="border:none;border-bottom:1px solid #888;width:100px;font-size:13px;outline:none;font-family:'Sarabun',sans-serif;">
-            </div>
-            <!-- Severity & Type -->
-            <div class="radio-group">
-                <label style="font-weight:700;">Severity Level</label>
-                <label class="radio-item"><input type="radio" name="severity" value="Critical"> Critical</label>
-                <label class="radio-item"><input type="radio" name="severity" value="Significant"> Significant</label>
-                <label class="radio-item"><input type="radio" name="severity" value="Not critical"> Not critical</label>
-                <span style="margin-left:15px;font-weight:700;">Type</span>
-                <label class="radio-item"><input type="radio" name="locationType" value="Remote"> Remote</label>
-                <label class="radio-item"><input type="radio" name="locationType" value="On-site"> On-site</label>
-            </div>
-            <!-- Product -->
-            <div class="form-row">
-                <div class="form-group">
-                    <label>Product</label>
-                    <input type="text" id="product">
-                </div>
-                <div class="form-group">
-                    <label>Model</label>
-                    <input type="text" id="model">
-                </div>
-                <div class="form-group" style="flex:0.7">
-                    <label>S/N</label>
-                    <input type="text" id="serialNo">
-                </div>
-            </div>
-            <!-- Subject / Action / Remark -->
-            <div class="full-width-group">
-                <label>Subject</label>
-                <textarea id="subject" rows="4" placeholder="อธิบายปัญหาที่พบ..."></textarea>
-            </div>
-            <div class="full-width-group">
-                <label>Action</label>
-                <textarea id="action" rows="7" placeholder="รายละเอียดการดำเนินการแก้ไข..."></textarea>
-            </div>
-            <div class="full-width-group">
-                <label>Remark</label>
-                <textarea id="remark" rows="3" placeholder="หมายเหตุเพิ่มเติม..."></textarea>
-            </div>
-            <!-- Service Time -->
-            <div class="service-time-row">
-                <div class="time-group">
-                    <label>Service Date</label>
-                    <input type="date" id="serviceDate">
-                </div>
-                <div class="time-group">
-                    <label>Start Time</label>
-                    <input type="time" id="startTime">
-                </div>
-                <div class="time-group">
-                    <label>Finish Time</label>
-                    <input type="time" id="finishTime">
-                </div>
-                <div class="time-group">
-                    <label>Total Time</label>
-                    <input type="text" id="totalTime" class="total-time-display" readonly>
-                </div>
-            </div>
-            <!-- Status -->
-            <div class="radio-group">
-                <label style="font-weight:700;">Status</label>
-                <label class="radio-item"><input type="radio" name="status" value="Close"> Close</label>
-                <label class="radio-item"><input type="radio" name="status" value="Pending" checked> Pending</label>
-            </div>
-            <!-- Parts Table -->
-            <table class="parts-table">
-                <thead>
-                    <tr>
-                        <th style="width:15%"></th>
-                        <th style="width:25%">Part No</th>
-                        <th style="width:35%">Description</th>
-                        <th style="width:10%">Qty</th>
-                        <th style="width:15%">S/N</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td style="font-weight:600;">Spare Usage</td>
-                        <td><input type="text" id="sparePartNo"></td>
-                        <td><input type="text" id="spareDesc"></td>
-                        <td><input type="text" id="spareQty"></td>
-                        <td><input type="text" id="spareSN"></td>
-                    </tr>
-                    <tr>
-                        <td style="font-weight:600;">Defective Part</td>
-                        <td><input type="text" id="defPartNo"></td>
-                        <td><input type="text" id="defDesc"></td>
-                        <td><input type="text" id="defQty"></td>
-                        <td><input type="text" id="defSN"></td>
-                    </tr>
-                </tbody>
-            </table>
-            <!-- Bottom: Charges + Signatures -->
-            <div class="bottom-section">
-                <table class="charge-table">
-                    <tr>
-                        <td class="charge-td-label">Service Charge</td>
-                        <td class="charge-td-value"><input type="text" id="serviceCharge"></td>
-                    </tr>
-                    <tr class="charge-row-spacer"><td></td><td></td></tr>
-                    <tr>
-                        <td class="charge-td-label">Travelling<br>Charge</td>
-                        <td class="charge-td-value"><input type="text" id="travelCharge"></td>
-                    </tr>
-                    <tr class="charge-row-spacer"><td></td><td></td></tr>
-                    <tr>
-                        <td class="charge-td-label" style="border-top:1.5px solid #333;">Total</td>
-                        <td class="charge-td-value-total" style="border-top:1.5px solid #333;"><input type="text" id="totalCharge" readonly></td>
-                    </tr>
-                </table>
-                <div class="signature-section">
-                    <div class="signature-box">
-                        <div class="sig-label">Serviced By :</div>
-                        <div class="sig-canvas-wrap">
-                            <canvas class="sig-canvas" id="sigService"></canvas>
-                        </div>
-                        <input type="text" class="sig-name-input" id="servicedByName" placeholder="( ชื่อ-สกุล )">
-                        <div class="sig-label-bottom">Signature</div>
-                        <span class="clear-sig" onclick="clearSignature('sigService')">ล้างลายเซ็น</span>
-                    </div>
-                    <div class="signature-box">
-                        <div class="sig-label">Customer By :</div>
-                        <div class="sig-canvas-wrap">
-                            <canvas class="sig-canvas" id="sigCustomer"></canvas>
-                        </div>
-                        <input type="text" class="sig-name-input" id="customerByName" placeholder="( ชื่อ-สกุล )">
-                        <div class="sig-label-bottom">Signature</div>
-                        <span class="clear-sig" onclick="clearSignature('sigCustomer')">ล้างลายเซ็น</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Document List Modal -->
-    <div class="modal-overlay" id="docListModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>📋 รายการ Service Report</h2>
-                <button class="modal-close" onclick="closeDocList()">✕</button>
-            </div>
-            <div id="docListContent"></div>
-        </div>
-    </div>
-    <!-- PDF Options Modal -->
-    <div class="pdf-modal-overlay" id="pdfModal">
-        <div class="pdf-modal-content">
-            <h3>📥 PDF สร้างเรียบร้อย!</h3>
-            <p id="pdfFileName"></p>
-            <div class="pdf-modal-buttons">
-                <button class="pdf-action-btn pdf-btn-download" onclick="pdfDownload()">📥 ดาวน์โหลด PDF</button>
-                <button class="pdf-action-btn pdf-btn-share" id="pdfShareBtn" onclick="pdfShare()" style="display:none;">📤 แชร์ / ส่งไฟล์</button>
-                <button class="pdf-action-btn pdf-btn-preview" onclick="pdfPreview()">👁️ ดูตัวอย่าง</button>
-                <button class="pdf-action-btn pdf-btn-close" onclick="closePdfModal()">✕ ปิด</button>
-            </div>
-        </div>
-    </div>
-    <!-- Loading -->
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="loading-spinner">
-            <div class="spinner"></div>
-            <p>กำลังสร้าง PDF...</p>
-        </div>
-    </div>
-    <!-- Toast -->
-    <div class="toast" id="toast"></div>
-    <script>
-        let currentPdfBlob = null;
-        let currentPdfFileName = '';
-        function isMobile() {
-            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
-        }
-        function canShare() {
-            return navigator.share && navigator.canShare;
-        }
-        // ============ Signature Pad ============
-        class SignaturePad {
-            constructor(canvasId) {
-                this.canvas = document.getElementById(canvasId);
-                this.ctx = this.canvas.getContext('2d');
-                this.drawing = false;
-                this.lastX = 0; this.lastY = 0;
-                this.resizeCanvas();
-                window.addEventListener('resize', () => this.resizeCanvas());
-                this.canvas.addEventListener('mousedown', e => this.startDraw(e));
-                this.canvas.addEventListener('mousemove', e => this.draw(e));
-                this.canvas.addEventListener('mouseup', () => this.drawing=false);
-                this.canvas.addEventListener('mouseout', () => this.drawing=false);
-                this.canvas.addEventListener('touchstart', e => this.startDrawTouch(e), {passive:false});
-                this.canvas.addEventListener('touchmove', e => this.drawTouch(e), {passive:false});
-                this.canvas.addEventListener('touchend', () => this.drawing=false);
-            }
-            resizeCanvas() {
-                const w = this.canvas.parentElement;
-                const d = this.canvas.toDataURL();
-                this.canvas.width = w.offsetWidth;
-                this.canvas.height = w.offsetHeight;
-                if (d && d !== 'data:,') { const i = new Image(); i.onload = () => this.ctx.drawImage(i,0,0); i.src = d; }
-                this.ctx.strokeStyle = '#000'; this.ctx.lineWidth = 2; this.ctx.lineCap = 'round'; this.ctx.lineJoin = 'round';
-            }
-            getPos(e) { const r = this.canvas.getBoundingClientRect(); return {x:e.clientX-r.left, y:e.clientY-r.top}; }
-            startDraw(e) { this.drawing=true; const p=this.getPos(e); this.lastX=p.x; this.lastY=p.y; }
-            draw(e) { if(!this.drawing) return; const p=this.getPos(e); this.ctx.beginPath(); this.ctx.moveTo(this.lastX,this.lastY); this.ctx.lineTo(p.x,p.y); this.ctx.stroke(); this.lastX=p.x; this.lastY=p.y; }
-            startDrawTouch(e) { e.preventDefault(); const t=e.touches[0], r=this.canvas.getBoundingClientRect(); this.drawing=true; this.lastX=t.clientX-r.left; this.lastY=t.clientY-r.top; }
-            drawTouch(e) { if(!this.drawing) return; e.preventDefault(); const t=e.touches[0], r=this.canvas.getBoundingClientRect(); const x=t.clientX-r.left, y=t.clientY-r.top; this.ctx.beginPath(); this.ctx.moveTo(this.lastX,this.lastY); this.ctx.lineTo(x,y); this.ctx.stroke(); this.lastX=x; this.lastY=y; }
-            clear() { this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height); }
-            getData() { return this.canvas.toDataURL(); }
-            loadData(d) { if(!d) return; const i=new Image(); i.onload=()=>{this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height); this.ctx.drawImage(i,0,0);}; i.src=d; }
-        }
-        let sigServicePad, sigCustomerPad;
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                sigServicePad = new SignaturePad('sigService');
-                sigCustomerPad = new SignaturePad('sigCustomer');
-            }, 100);
-        });
-        function clearSignature(id) { if(id==='sigService') sigServicePad.clear(); if(id==='sigCustomer') sigCustomerPad.clear(); }
-        // ============ Auto Calculate ============
-        document.getElementById('startTime').addEventListener('change', calcTotalTime);
-        document.getElementById('finishTime').addEventListener('change', calcTotalTime);
-        function calcTotalTime() {
-            const s=document.getElementById('startTime').value, f=document.getElementById('finishTime').value;
-            if(s&&f){ const sa=s.split(':').map(Number), fa=f.split(':').map(Number); let m=(fa[0]*60+fa[1])-(sa[0]*60+sa[1]); if(m<0)m+=1440; document.getElementById('totalTime').value=Math.floor(m/60)+' Hrs '+(m%60)+' Min'; }
-        }
-        document.getElementById('serviceCharge').addEventListener('input', calcTotal);
-        document.getElementById('travelCharge').addEventListener('input', calcTotal);
-        function calcTotal() {
-            const sc=parseFloat(document.getElementById('serviceCharge').value)||0, tc=parseFloat(document.getElementById('travelCharge').value)||0;
-            document.getElementById('totalCharge').value=(sc+tc).toLocaleString();
-        }
-        // ============ Doc Number ============
-        function generateDocNumber() {
-            const now=new Date(), prefix='SR-'+now.getFullYear()+String(now.getMonth()+1).padStart(2,'0')+'-';
-            let docs=JSON.parse(localStorage.getItem('serviceReports')||'[]'), max=0;
-            docs.forEach(d=>{ if(d.docNumber&&d.docNumber.startsWith(prefix)){ const n=parseInt(d.docNumber.replace(prefix,'')); if(n>max)max=n; }});
-            return prefix+String(max+1).padStart(4,'0');
-        }
-        // ============ Radio Helpers ============
-        function getRadioValue(n) { const e=document.querySelector('input[name="'+n+'"]:checked'); return e?e.value:''; }
-        function setRadioValue(n,v) { if(!v)return; const e=document.querySelector('input[name="'+n+'"][value="'+v+'"]'); if(e)e.checked=true; }
-        // ============ Collect / Load ============
-        function collectFormData() {
-            return {
-                docNumber:document.getElementById('docNumber').textContent,
-                customerName:document.getElementById('customerName').value,
-                projectNo:document.getElementById('projectNo').value,
-                address:document.getElementById('address').value,
-                tel:document.getElementById('tel').value,
-                serviceType:getRadioValue('serviceType'),
-                serviceTypeOther:document.getElementById('serviceTypeOther').value,
-                requestDate:document.getElementById('requestDate').value,
-                requestTime:document.getElementById('requestTime').value,
-                problemType:getRadioValue('problemType'),
-                problemTypeOther:document.getElementById('problemTypeOther').value,
-                severity:getRadioValue('severity'),
-                locationType:getRadioValue('locationType'),
-                product:document.getElementById('product').value,
-                model:document.getElementById('model').value,
-                serialNo:document.getElementById('serialNo').value,
-                subject:document.getElementById('subject').value,
-                action:document.getElementById('action').value,
-                remark:document.getElementById('remark').value,
-                serviceDate:document.getElementById('serviceDate').value,
-                startTime:document.getElementById('startTime').value,
-                finishTime:document.getElementById('finishTime').value,
-                totalTime:document.getElementById('totalTime').value,
-                status:getRadioValue('status'),
-                sparePartNo:document.getElementById('sparePartNo').value,
-                spareDesc:document.getElementById('spareDesc').value,
-                spareQty:document.getElementById('spareQty').value,
-                spareSN:document.getElementById('spareSN').value,
-                defPartNo:document.getElementById('defPartNo').value,
-                defDesc:document.getElementById('defDesc').value,
-                defQty:document.getElementById('defQty').value,
-                defSN:document.getElementById('defSN').value,
-                serviceCharge:document.getElementById('serviceCharge').value,
-                travelCharge:document.getElementById('travelCharge').value,
-                totalCharge:document.getElementById('totalCharge').value,
-                servicedByName:document.getElementById('servicedByName').value,
-                customerByName:document.getElementById('customerByName').value,
-                sigServiceData:sigServicePad?sigServicePad.getData():'',
-                sigCustomerData:sigCustomerPad?sigCustomerPad.getData():'',
-                savedAt:new Date().toISOString()
-            };
-        }
-        function loadFormData(d) {
-            document.getElementById('docNumber').textContent=d.docNumber||'-NEW-';
-            document.getElementById('customerName').value=d.customerName||'';
-            document.getElementById('projectNo').value=d.projectNo||'';
-            document.getElementById('address').value=d.address||'';
-            document.getElementById('tel').value=d.tel||'';
-            setRadioValue('serviceType',d.serviceType);
-            document.getElementById('serviceTypeOther').value=d.serviceTypeOther||'';
-            document.getElementById('requestDate').value=d.requestDate||'';
-            document.getElementById('requestTime').value=d.requestTime||'';
-            setRadioValue('problemType',d.problemType);
-            document.getElementById('problemTypeOther').value=d.problemTypeOther||'';
-            setRadioValue('severity',d.severity);
-            setRadioValue('locationType',d.locationType);
-            document.getElementById('product').value=d.product||'';
-            document.getElementById('model').value=d.model||'';
-            document.getElementById('serialNo').value=d.serialNo||'';
-            document.getElementById('subject').value=d.subject||'';
-            document.getElementById('action').value=d.action||'';
-            document.getElementById('remark').value=d.remark||'';
-            document.getElementById('serviceDate').value=d.serviceDate||'';
-            document.getElementById('startTime').value=d.startTime||'';
-            document.getElementById('finishTime').value=d.finishTime||'';
-            document.getElementById('totalTime').value=d.totalTime||'';
-            setRadioValue('status',d.status);
-            document.getElementById('sparePartNo').value=d.sparePartNo||'';
-            document.getElementById('spareDesc').value=d.spareDesc||'';
-            document.getElementById('spareQty').value=d.spareQty||'';
-            document.getElementById('spareSN').value=d.spareSN||'';
-            document.getElementById('defPartNo').value=d.defPartNo||'';
-            document.getElementById('defDesc').value=d.defDesc||'';
-            document.getElementById('defQty').value=d.defQty||'';
-            document.getElementById('defSN').value=d.defSN||'';
-            document.getElementById('serviceCharge').value=d.serviceCharge||'';
-            document.getElementById('travelCharge').value=d.travelCharge||'';
-            document.getElementById('totalCharge').value=d.totalCharge||'';
-            document.getElementById('servicedByName').value=d.servicedByName||'';
-            document.getElementById('customerByName').value=d.customerByName||'';
-            if(d.sigServiceData&&sigServicePad) setTimeout(()=>sigServicePad.loadData(d.sigServiceData),200);
-            if(d.sigCustomerData&&sigCustomerPad) setTimeout(()=>sigCustomerPad.loadData(d.sigCustomerData),200);
-        }
-        // ============ New Report ============
-        function newReport() {
-            if(!confirm('สร้างเอกสารใหม่?')) return;
-            document.querySelectorAll('input[type="text"],input[type="date"],input[type="time"],input[type="number"],textarea').forEach(e=>e.value='');
-            document.querySelectorAll('input[type="radio"]').forEach(e=>e.checked=false);
-            document.querySelector('input[name="status"][value="Pending"]').checked=true;
-            document.getElementById('docNumber').textContent='-NEW-';
-            if(sigServicePad) sigServicePad.clear();
-            if(sigCustomerPad) sigCustomerPad.clear();
-            const t=new Date().toISOString().split('T')[0];
-            document.getElementById('requestDate').value=t;
-            document.getElementById('serviceDate').value=t;
-            showToast('สร้างเอกสารใหม่แล้ว','info');
-        }
-        // ============ Save ============
-        function saveReport() {
-            let data=collectFormData();
-            if(data.docNumber==='-NEW-'){ data.docNumber=generateDocNumber(); document.getElementById('docNumber').textContent=data.docNumber; }
-            if(!data.customerName.trim()){ showToast('กรุณากรอก Customer Name','error'); document.getElementById('customerName').focus(); return; }
-            let docs=JSON.parse(localStorage.getItem('serviceReports')||'[]');
-            const idx=docs.findIndex(d=>d.docNumber===data.docNumber);
-            if(idx>=0) docs[idx]=data; else docs.push(data);
-            localStorage.setItem('serviceReports',JSON.stringify(docs));
-            showToast('บันทึกเรียบร้อย: '+data.docNumber,'success');
-        }
-        // ============ EXPORT PDF ============
-        async function exportPDF() {
-            const docNum=document.getElementById('docNumber').textContent;
-            if(docNum==='-NEW-'){ showToast('กรุณาบันทึกก่อน Export','error'); return; }
-            document.getElementById('loadingOverlay').classList.add('active');
-            const clearBtns=document.querySelectorAll('.clear-sig');
-            clearBtns.forEach(b=>b.style.display='none');
-            try {
-                window.scrollTo(0,0);
-                await new Promise(r=>setTimeout(r,300));
-                const el=document.getElementById('reportPage');
-                const canvas=await html2canvas(el,{
-                    scale:2, useCORS:true, backgroundColor:'#ffffff',
-                    logging:false, allowTaint:true,
-                    scrollX:0, scrollY:-window.scrollY,
-                    windowWidth:el.scrollWidth, windowHeight:el.scrollHeight
-                });
-                const{jsPDF}=window.jspdf;
-                const pdf=new jsPDF('p','mm','a4');
-                const pw=pdf.internal.pageSize.getWidth(), ph=pdf.internal.pageSize.getHeight(), mg=10;
-                const cw=pw-mg*2, imgW=cw, imgH=(canvas.height*imgW)/canvas.width, pch=ph-mg*2;
-                if(imgH<=pch){
-                    pdf.addImage(canvas.toDataURL('image/png'),'PNG',mg,mg,imgW,imgH);
-                } else {
-                    let rem=imgH, sy=0;
-                    while(rem>0){
-                        if(sy>0) pdf.addPage();
-                        const sh=Math.min(pch,rem), spy=(sy/imgH)*canvas.height, sph=(sh/imgH)*canvas.height;
-                        const sc=document.createElement('canvas'); sc.width=canvas.width; sc.height=sph;
-                        sc.getContext('2d').drawImage(canvas,0,spy,canvas.width,sph,0,0,canvas.width,sph);
-                        pdf.addImage(sc.toDataURL('image/png'),'PNG',mg,mg,imgW,sh);
-                        sy+=sh; rem-=sh;
-                    }
-                }
-                currentPdfBlob=pdf.output('blob');
-                currentPdfFileName=docNum+'.pdf';
-                document.getElementById('loadingOverlay').classList.remove('active');
-                if(isMobile()){ showPdfModal(currentPdfFileName); }
-                else { pdf.save(currentPdfFileName); showToast('PDF สร้างเรียบร้อย!','success'); }
-            } catch(err){
-                document.getElementById('loadingOverlay').classList.remove('active');
-                showToast('เกิดข้อผิดพลาด: '+err.message,'error');
-            }
-            clearBtns.forEach(b=>b.style.display='');
-        }
-        // ============ PDF Modal ============
-        function showPdfModal(fn) {
-            document.getElementById('pdfFileName').textContent=fn;
-            document.getElementById('pdfShareBtn').style.display=canShare()?'flex':'none';
-            document.getElementById('pdfModal').classList.add('active');
-        }
-        function closePdfModal() { document.getElementById('pdfModal').classList.remove('active'); }
-        function pdfDownload() {
-            if(!currentPdfBlob) return;
-            try {
-                const url=URL.createObjectURL(currentPdfBlob);
-                const a=document.createElement('a'); a.href=url; a.download=currentPdfFileName; a.style.display='none';
-                document.body.appendChild(a); a.click();
-                setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},1000);
-                showToast('กำลังดาวน์โหลด...','success'); closePdfModal();
-            } catch(e){ pdfPreview(); }
-        }
-        async function pdfShare() {
-            if(!currentPdfBlob) return;
-            try {
-                const file=new File([currentPdfBlob],currentPdfFileName,{type:'application/pdf'});
-                if(navigator.canShare&&navigator.canShare({files:[file]})){
-                    await navigator.share({title:'Service Report',text:currentPdfFileName,files:[file]});
-                    showToast('แชร์เรียบร้อย!','success'); closePdfModal();
-                } else { pdfDownload(); }
-            } catch(e){ if(e.name!=='AbortError') showToast('ลองดาวน์โหลดแทน','error'); }
-        }
-        function pdfPreview() {
-            if(!currentPdfBlob) return;
-            try {
-                const url=URL.createObjectURL(currentPdfBlob);
-                const w=window.open(url,'_blank');
-                if(!w){ const a=document.createElement('a'); a.href=url; a.target='_blank'; document.body.appendChild(a); a.click(); document.body.removeChild(a); }
-                setTimeout(()=>URL.revokeObjectURL(url),60000);
-                showToast('กำลังเปิด PDF...','info'); closePdfModal();
-            } catch(e){ showToast('ลองดาวน์โหลดแทน','error'); }
-        }
-        // ============ Doc List ============
-        function showDocList() {
-            let docs=JSON.parse(localStorage.getItem('serviceReports')||'[]');
-            const c=document.getElementById('docListContent');
-            if(!docs.length){ c.innerHTML='<div class="no-docs">📭 ยังไม่มีเอกสาร</div>'; }
-            else {
-                docs.sort((a,b)=>b.savedAt.localeCompare(a.savedAt));
-                let h='<table class="doc-list-table"><thead><tr><th>เลขที่</th><th>ลูกค้า</th><th>วันที่</th><th>สถานะ</th><th>จัดการ</th></tr></thead><tbody>';
-                docs.forEach(d=>{
-                    const sc=d.status==='Close'?'status-close':'status-pending';
-                    const sd=d.savedAt?new Date(d.savedAt).toLocaleDateString('th-TH'):'-';
-                    h+='<tr><td><strong>'+d.docNumber+'</strong></td><td>'+(d.customerName||'-')+'</td><td>'+sd+'</td>';
-                    h+='<td><span class="status-badge '+sc+'">'+(d.status||'Pending')+'</span></td>';
-                    h+='<td><button class="btn-load" onclick="loadReport(\''+d.docNumber+'\')">📂</button>';
-                    h+='<button class="btn-delete" onclick="deleteReport(\''+d.docNumber+'\')">🗑️</button></td></tr>';
-                });
-                h+='</tbody></table>'; c.innerHTML=h;
-            }
-            document.getElementById('docListModal').classList.add('active');
-        }
-        function closeDocList(){ document.getElementById('docListModal').classList.remove('active'); }
-        function loadReport(n){ const docs=JSON.parse(localStorage.getItem('serviceReports')||'[]'); const d=docs.find(x=>x.docNumber===n); if(d){loadFormData(d);closeDocList();showToast('โหลด '+n,'success');} }
-        function deleteReport(n){ if(!confirm('ลบ '+n+'?'))return; let docs=JSON.parse(localStorage.getItem('serviceReports')||'[]'); docs=docs.filter(x=>x.docNumber!==n); localStorage.setItem('serviceReports',JSON.stringify(docs)); showDocList(); showToast('ลบแล้ว','info'); }
-        // ============ Toast ============
-        function showToast(m,t){ const e=document.getElementById('toast'); e.textContent=m; e.className='toast toast-'+t+' show'; setTimeout(()=>e.classList.remove('show'),3000); }
-        // ============ Modal backdrop ============
-        document.getElementById('docListModal').addEventListener('click',function(e){if(e.target===this)closeDocList();});
-        document.getElementById('pdfModal').addEventListener('click',function(e){if(e.target===this)closePdfModal();});
-        // ============ Init ============
-        window.addEventListener('load',function(){ const t=new Date().toISOString().split('T')[0]; document.getElementById('requestDate').value=t; document.getElementById('serviceDate').value=t; });
-    </script>
+<!-- Top Navigation -->
+<div class="top-nav" id="topNav">
+<h1>🔧 MFEC Service Report</h1>
+<div class="nav-buttons">
+<button class="nav-btn btn-new" onclick="newReport()">📄 New</button>
+<button class="nav-btn btn-save" onclick="saveReport()">💾 Save</button>
+<button class="nav-btn btn-pdf" onclick="exportPDF()">📥 PDF</button>
+<button class="nav-btn btn-list" onclick="showDocList()">📋 List</button>
+</div>
+</div>
+<!-- Main Content -->
+<div class="main-container">
+<div class="report-page" id="reportPage">
+<!-- Header -->
+<div class="report-header">
+<div class="header-logo">
+<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/MFEC_Logo.png/300px-MFEC_Logo.png"
+alt="MFEC Logo"
+onerror="this.onerror=null; this.parentElement.innerHTML='<div style=\'font-size:32px;font-weight:900;color:#3d4f5f;letter-spacing:2px;\'>MFEC</div>';">
+</div>
+<div class="header-title">
+<h2>Service Report</h2>
+</div>
+<div class="header-docinfo">
+<div class="doc-no-wrapper">
+<span class="doc-label-no">No.</span>
+<span class="doc-value" id="docNumber">-NEW-</span>
+</div>
+</div>
+</div>
+<!-- Customer Info -->
+<div class="form-row">
+<div class="form-group" style="flex:2.5">
+<label>Customer Name</label>
+<input type="text" id="customerName">
+</div>
+<div class="form-group" style="flex:1">
+<label>Project No.</label>
+<input type="text" id="projectNo">
+</div>
+</div>
+<div class="form-row">
+<div class="form-group" style="flex:2.5">
+<label>Address</label>
+<input type="text" id="address">
+</div>
+<div class="form-group" style="flex:1">
+<label>Tel.</label>
+<input type="text" id="tel">
+</div>
+</div>
+<!-- Service Type -->
+<div class="radio-group">
+<label class="radio-item"><input type="radio" name="serviceType" value="Warranty"> Warranty</label>
+<label class="radio-item"><input type="radio" name="serviceType" value="MA Control"> MA Control</label>
+<label class="radio-item"><input type="radio" name="serviceType" value="Per Call"> Per Call</label>
+<label class="radio-item"><input type="radio" name="serviceType" value="Demo"> Demo</label>
+<label class="radio-item"><input type="radio" name="serviceType" value="Other"> Other</label>
+<input type="text" id="serviceTypeOther" style="border:none;border-bottom:1px solid #888;width:100px;font-size:13px;outline:none;font-family:'Sarabun',sans-serif;">
+</div>
+<div class="form-row">
+<div class="form-group">
+<label>Request Date</label>
+<input type="date" id="requestDate">
+</div>
+<div class="form-group">
+<label>Time</label>
+<input type="time" id="requestTime">
+</div>
+</div>
+<hr class="divider">
+<!-- Problem Type -->
+<div class="radio-group">
+<label class="radio-item"><input type="radio" name="problemType" value="H/W Problem"> H/W Problem</label>
+<label class="radio-item"><input type="radio" name="problemType" value="S/W Problem"> S/W Problem</label>
+<label class="radio-item"><input type="radio" name="problemType" value="Install"> Install</label>
+<label class="radio-item"><input type="radio" name="problemType" value="PM"> PM</label>
+<label class="radio-item"><input type="radio" name="problemType" value="Other"> Other</label>
+<input type="text" id="problemTypeOther" style="border:none;border-bottom:1px solid #888;width:100px;font-size:13px;outline:none;font-family:'Sarabun',sans-serif;">
+</div>
+<!-- Severity & Type -->
+<div class="radio-group">
+<label style="font-weight:700;">Severity Level</label>
+<label class="radio-item"><input type="radio" name="severity" value="Critical"> Critical</label>
+<label class="radio-item"><input type="radio" name="severity" value="Significant"> Significant</label>
+<label class="radio-item"><input type="radio" name="severity" value="Not critical"> Not critical</label>
+<span style="margin-left:15px;font-weight:700;">Type</span>
+<label class="radio-item"><input type="radio" name="locationType" value="Remote"> Remote</label>
+<label class="radio-item"><input type="radio" name="locationType" value="On-site"> On-site</label>
+</div>
+<!-- Product -->
+<div class="form-row">
+<div class="form-group">
+<label>Product</label>
+<input type="text" id="product">
+</div>
+<div class="form-group">
+<label>Model</label>
+<input type="text" id="model">
+</div>
+<div class="form-group" style="flex:0.7">
+<label>S/N</label>
+<input type="text" id="serialNo">
+</div>
+</div>
+<!-- Subject / Action / Remark -->
+<div class="full-width-group">
+<label>Subject</label>
+<textarea id="subject" rows="4" placeholder="อธิบายปัญหาที่พบ..."></textarea>
+</div>
+<div class="full-width-group">
+<label>Action</label>
+<textarea id="action" rows="7" placeholder="รายละเอียดการดำเนินการแก้ไข..."></textarea>
+</div>
+<div class="full-width-group">
+<label>Remark</label>
+<textarea id="remark" rows="3" placeholder="หมายเหตุเพิ่มเติม..."></textarea>
+</div>
+<!-- Service Time -->
+<div class="service-time-row">
+<div class="time-group">
+<label>Service Date</label>
+<input type="date" id="serviceDate">
+</div>
+<div class="time-group">
+<label>Start Time</label>
+<input type="time" id="startTime">
+</div>
+<div class="time-group">
+<label>Finish Time</label>
+<input type="time" id="finishTime">
+</div>
+<div class="time-group">
+<label>Total Time</label>
+<input type="text" id="totalTime" class="total-time-display" readonly>
+</div>
+</div>
+<!-- Status -->
+<div class="radio-group">
+<label style="font-weight:700;">Status</label>
+<label class="radio-item"><input type="radio" name="status" value="Close"> Close</label>
+<label class="radio-item"><input type="radio" name="status" value="Pending" checked> Pending</label>
+</div>
+<!-- Parts Table -->
+<table class="parts-table">
+<thead>
+<tr>
+<th style="width:15%"></th>
+<th style="width:25%">Part No</th>
+<th style="width:35%">Description</th>
+<th style="width:10%">Qty</th>
+<th style="width:15%">S/N</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="font-weight:600;">Spare Usage</td>
+<td><input type="text" id="sparePartNo"></td>
+<td><input type="text" id="spareDesc"></td>
+<td><input type="text" id="spareQty"></td>
+<td><input type="text" id="spareSN"></td>
+</tr>
+<tr>
+<td style="font-weight:600;">Defective Part</td>
+<td><input type="text" id="defPartNo"></td>
+<td><input type="text" id="defDesc"></td>
+<td><input type="text" id="defQty"></td>
+<td><input type="text" id="defSN"></td>
+</tr>
+</tbody>
+</table>
+<!-- Bottom: Charges + Signatures -->
+<div class="bottom-section">
+<table class="charge-table">
+<tr>
+<td class="charge-td-label">Service Charge</td>
+<td class="charge-td-value"><input type="text" id="serviceCharge"></td>
+</tr>
+<tr class="charge-row-spacer"><td></td><td></td></tr>
+<tr>
+<td class="charge-td-label">Travelling<br>Charge</td>
+<td class="charge-td-value"><input type="text" id="travelCharge"></td>
+</tr>
+<tr class="charge-row-spacer"><td></td><td></td></tr>
+<tr>
+<td class="charge-td-label" style="border-top:1.5px solid #333;">Total</td>
+<td class="charge-td-value-total" style="border-top:1.5px solid #333;"><input type="text" id="totalCharge" readonly></td>
+</tr>
+</table>
+<div class="signature-section">
+<div class="signature-box">
+<div class="sig-label">Serviced By :</div>
+<div class="sig-canvas-wrap">
+<canvas class="sig-canvas" id="sigService"></canvas>
+</div>
+<input type="text" class="sig-name-input" id="servicedByName" placeholder="( ชื่อ-สกุล )">
+<div class="sig-label-bottom">Signature</div>
+<span class="clear-sig" onclick="clearSignature('sigService')">ล้างลายเซ็น</span>
+</div>
+<div class="signature-box">
+<div class="sig-label">Customer By :</div>
+<div class="sig-canvas-wrap">
+<canvas class="sig-canvas" id="sigCustomer"></canvas>
+</div>
+<input type="text" class="sig-name-input" id="customerByName" placeholder="( ชื่อ-สกุล )">
+<div class="sig-label-bottom">Signature</div>
+<span class="clear-sig" onclick="clearSignature('sigCustomer')">ล้างลายเซ็น</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Document List Modal -->
+<div class="modal-overlay" id="docListModal">
+<div class="modal-content">
+<div class="modal-header">
+<h2>📋 รายการ Service Report</h2>
+<button class="modal-close" onclick="closeDocList()">✕</button>
+</div>
+<div id="docListContent"></div>
+</div>
+</div>
+<!-- PDF Options Modal -->
+<div class="pdf-modal-overlay" id="pdfModal">
+<div class="pdf-modal-content">
+<h3>📥 PDF สร้างเรียบร้อย!</h3>
+<p id="pdfFileName"></p>
+<div class="pdf-modal-buttons">
+<button class="pdf-action-btn pdf-btn-download" onclick="pdfDownload()">📥 ดาวน์โหลด PDF</button>
+<button class="pdf-action-btn pdf-btn-share" id="pdfShareBtn" onclick="pdfShare()" style="display:none;">📤 แชร์ / ส่งไฟล์</button>
+<button class="pdf-action-btn pdf-btn-preview" onclick="pdfPreview()">👁️ ดูตัวอย่าง</button>
+<button class="pdf-action-btn pdf-btn-close" onclick="closePdfModal()">✕ ปิด</button>
+</div>
+</div>
+</div>
+<!-- Loading -->
+<div class="loading-overlay" id="loadingOverlay">
+<div class="loading-spinner">
+<div class="spinner"></div>
+<p>กำลังสร้าง PDF...</p>
+</div>
+</div>
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+<script>
+let currentPdfBlob = null;
+let currentPdfFileName = '';
+function isMobile() {
+return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
+}
+function canShare() {
+return navigator.share && navigator.canShare;
+}
+// ============ Signature Pad ============
+class SignaturePad {
+constructor(canvasId) {
+this.canvas = document.getElementById(canvasId);
+this.ctx = this.canvas.getContext('2d');
+this.drawing = false;
+this.lastX = 0; this.lastY = 0;
+this.resizeCanvas();
+window.addEventListener('resize', () => this.resizeCanvas());
+this.canvas.addEventListener('mousedown', e => this.startDraw(e));
+this.canvas.addEventListener('mousemove', e => this.draw(e));
+this.canvas.addEventListener('mouseup', () => this.drawing=false);
+this.canvas.addEventListener('mouseout', () => this.drawing=false);
+this.canvas.addEventListener('touchstart', e => this.startDrawTouch(e), {passive:false});
+this.canvas.addEventListener('touchmove', e => this.drawTouch(e), {passive:false});
+this.canvas.addEventListener('touchend', () => this.drawing=false);
+}
+resizeCanvas() {
+const w = this.canvas.parentElement;
+const d = this.canvas.toDataURL();
+this.canvas.width = w.offsetWidth;
+this.canvas.height = w.offsetHeight;
+if (d && d !== 'data:,') { const i = new Image(); i.onload = () => this.ctx.drawImage(i,0,0); i.src = d; }
+this.ctx.strokeStyle = '#000'; this.ctx.lineWidth = 2; this.ctx.lineCap = 'round'; this.ctx.lineJoin = 'round';
+}
+getPos(e) { const r = this.canvas.getBoundingClientRect(); return {x:e.clientX-r.left, y:e.clientY-r.top}; }
+startDraw(e) { this.drawing=true; const p=this.getPos(e); this.lastX=p.x; this.lastY=p.y; }
+draw(e) { if(!this.drawing) return; const p=this.getPos(e); this.ctx.beginPath(); this.ctx.moveTo(this.lastX,this.lastY); this.ctx.lineTo(p.x,p.y); this.ctx.stroke(); this.lastX=p.x; this.lastY=p.y; }
+startDrawTouch(e) { e.preventDefault(); const t=e.touches[0], r=this.canvas.getBoundingClientRect(); this.drawing=true; this.lastX=t.clientX-r.left; this.lastY=t.clientY-r.top; }
+drawTouch(e) { if(!this.drawing) return; e.preventDefault(); const t=e.touches[0], r=this.canvas.getBoundingClientRect(); const x=t.clientX-r.left, y=t.clientY-r.top; this.ctx.beginPath(); this.ctx.moveTo(this.lastX,this.lastY); this.ctx.lineTo(x,y); this.ctx.stroke(); this.lastX=x; this.lastY=y; }
+clear() { this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height); }
+getData() { return this.canvas.toDataURL(); }
+loadData(d) { if(!d) return; const i=new Image(); i.onload=()=>{this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height); this.ctx.drawImage(i,0,0);}; i.src=d; }
+}
+let sigServicePad, sigCustomerPad;
+window.addEventListener('load', () => {
+setTimeout(() => {
+sigServicePad = new SignaturePad('sigService');
+sigCustomerPad = new SignaturePad('sigCustomer');
+}, 100);
+});
+function clearSignature(id) { if(id==='sigService') sigServicePad.clear(); if(id==='sigCustomer') sigCustomerPad.clear(); }
+// ============ Auto Calculate ============
+document.getElementById('startTime').addEventListener('change', calcTotalTime);
+document.getElementById('finishTime').addEventListener('change', calcTotalTime);
+function calcTotalTime() {
+const s=document.getElementById('startTime').value, f=document.getElementById('finishTime').value;
+if(s&&f){ const sa=s.split(':').map(Number), fa=f.split(':').map(Number); let m=(fa[0]*60+fa[1])-(sa[0]*60+sa[1]); if(m<0)m+=1440; document.getElementById('totalTime').value=Math.floor(m/60)+' Hrs '+(m%60)+' Min'; }
+}
+document.getElementById('serviceCharge').addEventListener('input', calcTotal);
+document.getElementById('travelCharge').addEventListener('input', calcTotal);
+function calcTotal() {
+const sc=parseFloat(document.getElementById('serviceCharge').value)||0, tc=parseFloat(document.getElementById('travelCharge').value)||0;
+document.getElementById('totalCharge').value=(sc+tc).toLocaleString();
+}
+// ============ Doc Number ============
+function generateDocNumber() {
+const now=new Date(), prefix='SR-'+now.getFullYear()+String(now.getMonth()+1).padStart(2,'0')+'-';
+let docs=JSON.parse(localStorage.getItem('serviceReports')||'[]'), max=0;
+docs.forEach(d=>{ if(d.docNumber&&d.docNumber.startsWith(prefix)){ const n=parseInt(d.docNumber.replace(prefix,'')); if(n>max)max=n; }});
+return prefix+String(max+1).padStart(4,'0');
+}
+// ============ Radio Helpers ============
+function getRadioValue(n) { const e=document.querySelector('input[name="'+n+'"]:checked'); return e?e.value:''; }
+function setRadioValue(n,v) { if(!v)return; const e=document.querySelector('input[name="'+n+'"][value="'+v+'"]'); if(e)e.checked=true; }
+// ============ Collect / Load ============
+function collectFormData() {
+return {
+docNumber:document.getElementById('docNumber').textContent,
+customerName:document.getElementById('customerName').value,
+projectNo:document.getElementById('projectNo').value,
+address:document.getElementById('address').value,
+tel:document.getElementById('tel').value,
+serviceType:getRadioValue('serviceType'),
+serviceTypeOther:document.getElementById('serviceTypeOther').value,
+requestDate:document.getElementById('requestDate').value,
+requestTime:document.getElementById('requestTime').value,
+problemType:getRadioValue('problemType'),
+problemTypeOther:document.getElementById('problemTypeOther').value,
+severity:getRadioValue('severity'),
+locationType:getRadioValue('locationType'),
+product:document.getElementById('product').value,
+model:document.getElementById('model').value,
+serialNo:document.getElementById('serialNo').value,
+subject:document.getElementById('subject').value,
+action:document.getElementById('action').value,
+remark:document.getElementById('remark').value,
+serviceDate:document.getElementById('serviceDate').value,
+startTime:document.getElementById('startTime').value,
+finishTime:document.getElementById('finishTime').value,
+totalTime:document.getElementById('totalTime').value,
+status:getRadioValue('status'),
+sparePartNo:document.getElementById('sparePartNo').value,
+spareDesc:document.getElementById('spareDesc').value,
+spareQty:document.getElementById('spareQty').value,
+spareSN:document.getElementById('spareSN').value,
+defPartNo:document.getElementById('defPartNo').value,
+defDesc:document.getElementById('defDesc').value,
+defQty:document.getElementById('defQty').value,
+defSN:document.getElementById('defSN').value,
+serviceCharge:document.getElementById('serviceCharge').value,
+travelCharge:document.getElementById('travelCharge').value,
+totalCharge:document.getElementById('totalCharge').value,
+servicedByName:document.getElementById('servicedByName').value,
+customerByName:document.getElementById('customerByName').value,
+sigServiceData:sigServicePad?sigServicePad.getData():'',
+sigCustomerData:sigCustomerPad?sigCustomerPad.getData():'',
+savedAt:new Date().toISOString()
+};
+}
+function loadFormData(d) {
+document.getElementById('docNumber').textContent=d.docNumber||'-NEW-';
+document.getElementById('customerName').value=d.customerName||'';
+document.getElementById('projectNo').value=d.projectNo||'';
+document.getElementById('address').value=d.address||'';
+document.getElementById('tel').value=d.tel||'';
+setRadioValue('serviceType',d.serviceType);
+document.getElementById('serviceTypeOther').value=d.serviceTypeOther||'';
+document.getElementById('requestDate').value=d.requestDate||'';
+document.getElementById('requestTime').value=d.requestTime||'';
+setRadioValue('problemType',d.problemType);
+document.getElementById('problemTypeOther').value=d.problemTypeOther||'';
+setRadioValue('severity',d.severity);
+setRadioValue('locationType',d.locationType);
+document.getElementById('product').value=d.product||'';
+document.getElementById('model').value=d.model||'';
+document.getElementById('serialNo').value=d.serialNo||'';
+document.getElementById('subject').value=d.subject||'';
+document.getElementById('action').value=d.action||'';
+document.getElementById('remark').value=d.remark||'';
+document.getElementById('serviceDate').value=d.serviceDate||'';
+document.getElementById('startTime').value=d.startTime||'';
+document.getElementById('finishTime').value=d.finishTime||'';
+document.getElementById('totalTime').value=d.totalTime||'';
+setRadioValue('status',d.status);
+document.getElementById('sparePartNo').value=d.sparePartNo||'';
+document.getElementById('spareDesc').value=d.spareDesc||'';
+document.getElementById('spareQty').value=d.spareQty||'';
+document.getElementById('spareSN').value=d.spareSN||'';
+document.getElementById('defPartNo').value=d.defPartNo||'';
+document.getElementById('defDesc').value=d.defDesc||'';
+document.getElementById('defQty').value=d.defQty||'';
+document.getElementById('defSN').value=d.defSN||'';
+document.getElementById('serviceCharge').value=d.serviceCharge||'';
+document.getElementById('travelCharge').value=d.travelCharge||'';
+document.getElementById('totalCharge').value=d.totalCharge||'';
+document.getElementById('servicedByName').value=d.servicedByName||'';
+document.getElementById('customerByName').value=d.customerByName||'';
+if(d.sigServiceData&&sigServicePad) setTimeout(()=>sigServicePad.loadData(d.sigServiceData),200);
+if(d.sigCustomerData&&sigCustomerPad) setTimeout(()=>sigCustomerPad.loadData(d.sigCustomerData),200);
+}
+// ============ New Report ============
+function newReport() {
+if(!confirm('สร้างเอกสารใหม่?')) return;
+document.querySelectorAll('input[type="text"],input[type="date"],input[type="time"],input[type="number"],textarea').forEach(e=>e.value='');
+document.querySelectorAll('input[type="radio"]').forEach(e=>e.checked=false);
+document.querySelector('input[name="status"][value="Pending"]').checked=true;
+document.getElementById('docNumber').textContent='-NEW-';
+if(sigServicePad) sigServicePad.clear();
+if(sigCustomerPad) sigCustomerPad.clear();
+const t=new Date().toISOString().split('T')[0];
+document.getElementById('requestDate').value=t;
+document.getElementById('serviceDate').value=t;
+showToast('สร้างเอกสารใหม่แล้ว','info');
+}
+// ============ Save ============
+function saveReport() {
+let data=collectFormData();
+if(data.docNumber==='-NEW-'){ data.docNumber=generateDocNumber(); document.getElementById('docNumber').textContent=data.docNumber; }
+if(!data.customerName.trim()){ showToast('กรุณากรอก Customer Name','error'); document.getElementById('customerName').focus(); return; }
+let docs=JSON.parse(localStorage.getItem('serviceReports')||'[]');
+const idx=docs.findIndex(d=>d.docNumber===data.docNumber);
+if(idx>=0) docs[idx]=data; else docs.push(data);
+localStorage.setItem('serviceReports',JSON.stringify(docs));
+showToast('บันทึกเรียบร้อย: '+data.docNumber,'success');
+}
+// ============ EXPORT PDF ============
+async function exportPDF() {
+const docNum=document.getElementById('docNumber').textContent;
+if(docNum==='-NEW-'){ showToast('กรุณาบันทึกก่อน Export','error'); return; }
+document.getElementById('loadingOverlay').classList.add('active');
+const clearBtns=document.querySelectorAll('.clear-sig');
+clearBtns.forEach(b=>b.style.display='none');
+try {
+window.scrollTo(0,0);
+await new Promise(r=>setTimeout(r,300));
+const el=document.getElementById('reportPage');
+const canvas=await html2canvas(el,{
+scale:2, useCORS:true, backgroundColor:'#ffffff',
+logging:false, allowTaint:true,
+scrollX:0, scrollY:-window.scrollY,
+windowWidth:el.scrollWidth, windowHeight:el.scrollHeight
+});
+const{jsPDF}=window.jspdf;
+const pdf=new jsPDF('p','mm','a4');
+const pw=pdf.internal.pageSize.getWidth(), ph=pdf.internal.pageSize.getHeight(), mg=10;
+const cw=pw-mg*2, imgW=cw, imgH=(canvas.height*imgW)/canvas.width, pch=ph-mg*2;
+if(imgH<=pch){
+pdf.addImage(canvas.toDataURL('image/png'),'PNG',mg,mg,imgW,imgH);
+} else {
+let rem=imgH, sy=0;
+while(rem>0){
+if(sy>0) pdf.addPage();
+const sh=Math.min(pch,rem), spy=(sy/imgH)*canvas.height, sph=(sh/imgH)*canvas.height;
+const sc=document.createElement('canvas'); sc.width=canvas.width; sc.height=sph;
+sc.getContext('2d').drawImage(canvas,0,spy,canvas.width,sph,0,0,canvas.width,sph);
+pdf.addImage(sc.toDataURL('image/png'),'PNG',mg,mg,imgW,sh);
+sy+=sh; rem-=sh;
+}
+}
+currentPdfBlob=pdf.output('blob');
+currentPdfFileName=docNum+'.pdf';
+document.getElementById('loadingOverlay').classList.remove('active');
+if(isMobile()){ showPdfModal(currentPdfFileName); }
+else { pdf.save(currentPdfFileName); showToast('PDF สร้างเรียบร้อย!','success'); }
+} catch(err){
+document.getElementById('loadingOverlay').classList.remove('active');
+showToast('เกิดข้อผิดพลาด: '+err.message,'error');
+}
+clearBtns.forEach(b=>b.style.display='');
+}
+// ============ PDF Modal ============
+function showPdfModal(fn) {
+document.getElementById('pdfFileName').textContent=fn;
+document.getElementById('pdfShareBtn').style.display=canShare()?'flex':'none';
+document.getElementById('pdfModal').classList.add('active');
+}
+function closePdfModal() { document.getElementById('pdfModal').classList.remove('active'); }
+function pdfDownload() {
+if(!currentPdfBlob) return;
+try {
+const url=URL.createObjectURL(currentPdfBlob);
+const a=document.createElement('a'); a.href=url; a.download=currentPdfFileName; a.style.display='none';
+document.body.appendChild(a); a.click();
+setTimeout(()=>{document.body.removeChild(a);URL.revokeObjectURL(url);},1000);
+showToast('กำลังดาวน์โหลด...','success'); closePdfModal();
+} catch(e){ pdfPreview(); }
+}
+async function pdfShare() {
+if(!currentPdfBlob) return;
+try {
+const file=new File([currentPdfBlob],currentPdfFileName,{type:'application/pdf'});
+if(navigator.canShare&&navigator.canShare({files:[file]})){
+await navigator.share({title:'Service Report',text:currentPdfFileName,files:[file]});
+showToast('แชร์เรียบร้อย!','success'); closePdfModal();
+} else { pdfDownload(); }
+} catch(e){ if(e.name!=='AbortError') showToast('ลองดาวน์โหลดแทน','error'); }
+}
+function pdfPreview() {
+if(!currentPdfBlob) return;
+try {
+const url=URL.createObjectURL(currentPdfBlob);
+const w=window.open(url,'_blank');
+if(!w){ const a=document.createElement('a'); a.href=url; a.target='_blank'; document.body.appendChild(a); a.click(); document.body.removeChild(a); }
+setTimeout(()=>URL.revokeObjectURL(url),60000);
+showToast('กำลังเปิด PDF...','info'); closePdfModal();
+} catch(e){ showToast('ลองดาวน์โหลดแทน','error'); }
+}
+// ============ Doc List ============
+function showDocList() {
+let docs=JSON.parse(localStorage.getItem('serviceReports')||'[]');
+const c=document.getElementById('docListContent');
+if(!docs.length){ c.innerHTML='<div class="no-docs">📭 ยังไม่มีเอกสาร</div>'; }
+else {
+docs.sort((a,b)=>b.savedAt.localeCompare(a.savedAt));
+let h='<table class="doc-list-table"><thead><tr><th>เลขที่</th><th>ลูกค้า</th><th>วันที่</th><th>สถานะ</th><th>จัดการ</th></tr></thead><tbody>';
+docs.forEach(d=>{
+const sc=d.status==='Close'?'status-close':'status-pending';
+const sd=d.savedAt?new Date(d.savedAt).toLocaleDateString('th-TH'):'-';
+h+='<tr><td><strong>'+d.docNumber+'</strong></td><td>'+(d.customerName||'-')+'</td><td>'+sd+'</td>';
+h+='<td><span class="status-badge '+sc+'">'+(d.status||'Pending')+'</span></td>';
+h+='<td><button class="btn-load" onclick="loadReport(\''+d.docNumber+'\')">📂</button>';
+h+='<button class="btn-delete" onclick="deleteReport(\''+d.docNumber+'\')">🗑️</button></td></tr>';
+});
+h+='</tbody></table>'; c.innerHTML=h;
+}
+document.getElementById('docListModal').classList.add('active');
+}
+function closeDocList(){ document.getElementById('docListModal').classList.remove('active'); }
+function loadReport(n){ const docs=JSON.parse(localStorage.getItem('serviceReports')||'[]'); const d=docs.find(x=>x.docNumber===n); if(d){loadFormData(d);closeDocList();showToast('โหลด '+n,'success');} }
+function deleteReport(n){ if(!confirm('ลบ '+n+'?'))return; let docs=JSON.parse(localStorage.getItem('serviceReports')||'[]'); docs=docs.filter(x=>x.docNumber!==n); localStorage.setItem('serviceReports',JSON.stringify(docs)); showDocList(); showToast('ลบแล้ว','info'); }
+// ============ Toast ============
+function showToast(m,t){ const e=document.getElementById('toast'); e.textContent=m; e.className='toast toast-'+t+' show'; setTimeout(()=>e.classList.remove('show'),3000); }
+// ============ Modal backdrop ============
+document.getElementById('docListModal').addEventListener('click',function(e){if(e.target===this)closeDocList();});
+document.getElementById('pdfModal').addEventListener('click',function(e){if(e.target===this)closePdfModal();});
+// ============ Init ============
+window.addEventListener('load',function(){ const t=new Date().toISOString().split('T')[0]; document.getElementById('requestDate').value=t; document.getElementById('serviceDate').value=t; });
+</script>
 </body>
 </html>
