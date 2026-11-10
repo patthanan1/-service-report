@@ -19,7 +19,6 @@
             color: #333;
             font-size: 14px;
         }
-
         /* Top Navigation */
         .top-nav {
             background: linear-gradient(135deg, #1a237e, #283593);
@@ -65,14 +64,12 @@
         .btn-pdf:hover { background: #c62828; }
         .btn-list { background: #FF9800; color: white; }
         .btn-list:hover { background: #e65100; }
-
         /* Main Container */
         .main-container {
             max-width: 900px;
             margin: 20px auto;
             padding: 0 15px;
         }
-
         /* Report Page */
         .report-page {
             background: white;
@@ -80,7 +77,6 @@
             box-shadow: 0 0 20px rgba(0,0,0,0.1);
             border-radius: 4px;
         }
-
         /* ============ HEADER ============ */
         .report-header {
             display: flex;
@@ -117,7 +113,6 @@
             text-transform: uppercase;
             color: #1a237e;
         }
-
         /* ===== No. ช่องกว้างขึ้น 240px ===== */
         .header-docinfo {
             flex: 0 0 240px;
@@ -147,7 +142,6 @@
             line-height: 1;
             white-space: nowrap;
         }
-
         /* ============ FORM ============ */
         .form-row {
             display: flex;
@@ -201,7 +195,6 @@
         .form-group textarea:focus {
             border-color: #1a237e;
         }
-
         /* Service Time Row */
         .service-time-row {
             display: flex;
@@ -247,13 +240,11 @@
             color: #1a237e;
             font-weight: 600;
         }
-
         .divider {
             border: none;
             border-top: 1.5px dashed #999;
             margin: 15px 0;
         }
-
         /* Radio Groups */
         .radio-group {
             display: flex;
@@ -279,7 +270,6 @@
             cursor: pointer;
             accent-color: #1a237e;
         }
-
         /* Parts Table */
         .parts-table {
             width: 100%;
@@ -306,14 +296,12 @@
             padding: 2px;
             background: transparent;
         }
-
         /* Bottom Section */
         .bottom-section {
             display: flex;
             gap: 0;
             margin-top: 10px;
         }
-
         /* Charge Table */
         .charge-table {
             border-collapse: collapse;
@@ -363,7 +351,6 @@
             border-bottom: none;
             padding: 5px;
         }
-
         /* Signature */
         .signature-section {
             display: flex;
@@ -424,7 +411,6 @@
             text-decoration: underline;
             margin-top: 3px;
         }
-
         /* Full-width textarea */
         .full-width-group {
             margin-bottom: 14px;
@@ -448,7 +434,6 @@
         .full-width-group textarea:focus {
             border-color: #1a237e;
         }
-
         /* ============ PDF MODAL ============ */
         .pdf-modal-overlay {
             display: none;
@@ -505,7 +490,6 @@
         .pdf-btn-share { background: #4CAF50; color: white; }
         .pdf-btn-preview { background: #2196F3; color: white; }
         .pdf-btn-close { background: #eee; color: #333; }
-
         /* Loading */
         .loading-overlay {
             display: none;
@@ -535,7 +519,6 @@
         }
         @keyframes spin { to { transform: rotate(360deg); } }
         .loading-spinner p { color: #333; font-weight: 600; font-size: 15px; }
-
         /* Doc List Modal */
         .modal-overlay {
             display: none;
@@ -595,7 +578,6 @@
             margin-left: 5px;
         }
         .no-docs { text-align: center; padding: 40px; color: #999; font-size: 16px; }
-
         /* Toast */
         .toast {
             position: fixed;
@@ -615,7 +597,6 @@
         .toast-success { background: #4CAF50; }
         .toast-error { background: #f44336; }
         .toast-info { background: #2196F3; }
-
         .status-badge {
             padding: 3px 10px;
             border-radius: 12px;
@@ -625,7 +606,6 @@
         }
         .status-close { background: #e8f5e9; color: #2e7d32; }
         .status-pending { background: #fff3e0; color: #e65100; }
-
         /* ============ RESPONSIVE ============ */
         @media (max-width: 768px) {
             .top-nav {
@@ -672,7 +652,6 @@
             .parts-table { font-size: 11px; }
             .parts-table th, .parts-table td { padding: 4px 5px; }
         }
-
         @media print {
             .top-nav, .nav-buttons, .clear-sig,
             .modal-overlay, .toast, .pdf-modal-overlay,
@@ -685,7 +664,6 @@
     </style>
 </head>
 <body>
-
     <!-- Top Navigation -->
     <div class="top-nav" id="topNav">
         <h1>🔧 MFEC Service Report</h1>
@@ -696,17 +674,26 @@
             <button class="nav-btn btn-list" onclick="showDocList()">📋 List</button>
         </div>
     </div>
-
     <!-- Main Content -->
     <div class="main-container">
         <div class="report-page" id="reportPage">
-
             <!-- Header -->
             <div class="report-header">
                 <div class="header-logo">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/eb/MFEC_Logo.png/300px-MFEC_Logo.png" 
-                         alt="MFEC Logo" 
-                         onerror="this.onerror=null; this.parentElement.innerHTML='<div style=\'font-size:32px;font-weight:900;color:#3d4f5f;letter-spacing:2px;\'>MFEC</div>';">
+                    <!-- MFEC Logo - SVG version matching the brand logo -->
+                    <svg viewBox="0 0 320 90" style="max-width:145px;max-height:58px;" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Letter M -->
+                        <path d="M0,80 L0,12 L12,12 L12,12 L30,52 L48,12 L60,12 L60,80 L50,80 L50,28 L32,68 L28,68 L10,28 L10,80 Z" fill="#3d4f5f"/>
+                        <!-- Blue chevron arrows above F -->
+                        <path d="M88,20 L96,10 L104,20" stroke="#1565C0" stroke-width="4.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M100,16 L108,6 L116,16" stroke="#42a5f5" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                        <!-- Letter F -->
+                        <path d="M78,80 L78,22 L122,22 L122,32 L90,32 L90,48 L116,48 L116,58 L90,58 L90,80 Z" fill="#3d4f5f"/>
+                        <!-- Letter E -->
+                        <path d="M135,80 L135,12 L182,12 L182,22 L147,22 L147,40 L176,40 L176,50 L147,50 L147,70 L184,70 L184,80 Z" fill="#3d4f5f"/>
+                        <!-- Letter C -->
+                        <path d="M230,12 L260,12 L280,12 L280,22 L230,22 Q205,22 205,46 Q205,70 230,70 L280,70 L280,80 L230,80 Q192,80 192,46 Q192,12 230,12 Z" fill="#3d4f5f"/>
+                    </svg>
                 </div>
                 <div class="header-title">
                     <h2>Service Report</h2>
@@ -718,7 +705,6 @@
                     </div>
                 </div>
             </div>
-
             <!-- Customer Info -->
             <div class="form-row">
                 <div class="form-group" style="flex:2.5">
@@ -740,7 +726,6 @@
                     <input type="text" id="tel">
                 </div>
             </div>
-
             <!-- Service Type -->
             <div class="radio-group">
                 <label class="radio-item"><input type="radio" name="serviceType" value="Warranty"> Warranty</label>
@@ -750,7 +735,6 @@
                 <label class="radio-item"><input type="radio" name="serviceType" value="Other"> Other</label>
                 <input type="text" id="serviceTypeOther" style="border:none;border-bottom:1px solid #888;width:100px;font-size:13px;outline:none;font-family:'Sarabun',sans-serif;">
             </div>
-
             <div class="form-row">
                 <div class="form-group">
                     <label>Request Date</label>
@@ -761,9 +745,7 @@
                     <input type="time" id="requestTime">
                 </div>
             </div>
-
             <hr class="divider">
-
             <!-- Problem Type -->
             <div class="radio-group">
                 <label class="radio-item"><input type="radio" name="problemType" value="H/W Problem"> H/W Problem</label>
@@ -773,7 +755,6 @@
                 <label class="radio-item"><input type="radio" name="problemType" value="Other"> Other</label>
                 <input type="text" id="problemTypeOther" style="border:none;border-bottom:1px solid #888;width:100px;font-size:13px;outline:none;font-family:'Sarabun',sans-serif;">
             </div>
-
             <!-- Severity & Type -->
             <div class="radio-group">
                 <label style="font-weight:700;">Severity Level</label>
@@ -784,7 +765,6 @@
                 <label class="radio-item"><input type="radio" name="locationType" value="Remote"> Remote</label>
                 <label class="radio-item"><input type="radio" name="locationType" value="On-site"> On-site</label>
             </div>
-
             <!-- Product -->
             <div class="form-row">
                 <div class="form-group">
@@ -800,7 +780,6 @@
                     <input type="text" id="serialNo">
                 </div>
             </div>
-
             <!-- Subject / Action / Remark -->
             <div class="full-width-group">
                 <label>Subject</label>
@@ -814,7 +793,6 @@
                 <label>Remark</label>
                 <textarea id="remark" rows="3" placeholder="หมายเหตุเพิ่มเติม..."></textarea>
             </div>
-
             <!-- Service Time -->
             <div class="service-time-row">
                 <div class="time-group">
@@ -834,14 +812,12 @@
                     <input type="text" id="totalTime" class="total-time-display" readonly>
                 </div>
             </div>
-
             <!-- Status -->
             <div class="radio-group">
                 <label style="font-weight:700;">Status</label>
                 <label class="radio-item"><input type="radio" name="status" value="Close"> Close</label>
                 <label class="radio-item"><input type="radio" name="status" value="Pending" checked> Pending</label>
             </div>
-
             <!-- Parts Table -->
             <table class="parts-table">
                 <thead>
@@ -870,7 +846,6 @@
                     </tr>
                 </tbody>
             </table>
-
             <!-- Bottom: Charges + Signatures -->
             <div class="bottom-section">
                 <table class="charge-table">
@@ -889,7 +864,6 @@
                         <td class="charge-td-value-total" style="border-top:1.5px solid #333;"><input type="text" id="totalCharge" readonly></td>
                     </tr>
                 </table>
-
                 <div class="signature-section">
                     <div class="signature-box">
                         <div class="sig-label">Serviced By :</div>
@@ -911,10 +885,8 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
-
     <!-- Document List Modal -->
     <div class="modal-overlay" id="docListModal">
         <div class="modal-content">
@@ -925,7 +897,6 @@
             <div id="docListContent"></div>
         </div>
     </div>
-
     <!-- PDF Options Modal -->
     <div class="pdf-modal-overlay" id="pdfModal">
         <div class="pdf-modal-content">
@@ -939,7 +910,6 @@
             </div>
         </div>
     </div>
-
     <!-- Loading -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner">
@@ -947,21 +917,17 @@
             <p>กำลังสร้าง PDF...</p>
         </div>
     </div>
-
     <!-- Toast -->
     <div class="toast" id="toast"></div>
-
     <script>
         let currentPdfBlob = null;
         let currentPdfFileName = '';
-
         function isMobile() {
             return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth <= 768;
         }
         function canShare() {
             return navigator.share && navigator.canShare;
         }
-
         // ============ Signature Pad ============
         class SignaturePad {
             constructor(canvasId) {
@@ -996,7 +962,6 @@
             getData() { return this.canvas.toDataURL(); }
             loadData(d) { if(!d) return; const i=new Image(); i.onload=()=>{this.ctx.clearRect(0,0,this.canvas.width,this.canvas.height); this.ctx.drawImage(i,0,0);}; i.src=d; }
         }
-
         let sigServicePad, sigCustomerPad;
         window.addEventListener('load', () => {
             setTimeout(() => {
@@ -1005,7 +970,6 @@
             }, 100);
         });
         function clearSignature(id) { if(id==='sigService') sigServicePad.clear(); if(id==='sigCustomer') sigCustomerPad.clear(); }
-
         // ============ Auto Calculate ============
         document.getElementById('startTime').addEventListener('change', calcTotalTime);
         document.getElementById('finishTime').addEventListener('change', calcTotalTime);
@@ -1019,7 +983,6 @@
             const sc=parseFloat(document.getElementById('serviceCharge').value)||0, tc=parseFloat(document.getElementById('travelCharge').value)||0;
             document.getElementById('totalCharge').value=(sc+tc).toLocaleString();
         }
-
         // ============ Doc Number ============
         function generateDocNumber() {
             const now=new Date(), prefix='SR-'+now.getFullYear()+String(now.getMonth()+1).padStart(2,'0')+'-';
@@ -1027,11 +990,9 @@
             docs.forEach(d=>{ if(d.docNumber&&d.docNumber.startsWith(prefix)){ const n=parseInt(d.docNumber.replace(prefix,'')); if(n>max)max=n; }});
             return prefix+String(max+1).padStart(4,'0');
         }
-
         // ============ Radio Helpers ============
         function getRadioValue(n) { const e=document.querySelector('input[name="'+n+'"]:checked'); return e?e.value:''; }
         function setRadioValue(n,v) { if(!v)return; const e=document.querySelector('input[name="'+n+'"][value="'+v+'"]'); if(e)e.checked=true; }
-
         // ============ Collect / Load ============
         function collectFormData() {
             return {
@@ -1118,7 +1079,6 @@
             if(d.sigServiceData&&sigServicePad) setTimeout(()=>sigServicePad.loadData(d.sigServiceData),200);
             if(d.sigCustomerData&&sigCustomerPad) setTimeout(()=>sigCustomerPad.loadData(d.sigCustomerData),200);
         }
-
         // ============ New Report ============
         function newReport() {
             if(!confirm('สร้างเอกสารใหม่?')) return;
@@ -1133,7 +1093,6 @@
             document.getElementById('serviceDate').value=t;
             showToast('สร้างเอกสารใหม่แล้ว','info');
         }
-
         // ============ Save ============
         function saveReport() {
             let data=collectFormData();
@@ -1145,7 +1104,6 @@
             localStorage.setItem('serviceReports',JSON.stringify(docs));
             showToast('บันทึกเรียบร้อย: '+data.docNumber,'success');
         }
-
         // ============ EXPORT PDF ============
         async function exportPDF() {
             const docNum=document.getElementById('docNumber').textContent;
@@ -1191,7 +1149,6 @@
             }
             clearBtns.forEach(b=>b.style.display='');
         }
-
         // ============ PDF Modal ============
         function showPdfModal(fn) {
             document.getElementById('pdfFileName').textContent=fn;
@@ -1199,7 +1156,6 @@
             document.getElementById('pdfModal').classList.add('active');
         }
         function closePdfModal() { document.getElementById('pdfModal').classList.remove('active'); }
-
         function pdfDownload() {
             if(!currentPdfBlob) return;
             try {
@@ -1230,7 +1186,6 @@
                 showToast('กำลังเปิด PDF...','info'); closePdfModal();
             } catch(e){ showToast('ลองดาวน์โหลดแทน','error'); }
         }
-
         // ============ Doc List ============
         function showDocList() {
             let docs=JSON.parse(localStorage.getItem('serviceReports')||'[]');
@@ -1254,17 +1209,13 @@
         function closeDocList(){ document.getElementById('docListModal').classList.remove('active'); }
         function loadReport(n){ const docs=JSON.parse(localStorage.getItem('serviceReports')||'[]'); const d=docs.find(x=>x.docNumber===n); if(d){loadFormData(d);closeDocList();showToast('โหลด '+n,'success');} }
         function deleteReport(n){ if(!confirm('ลบ '+n+'?'))return; let docs=JSON.parse(localStorage.getItem('serviceReports')||'[]'); docs=docs.filter(x=>x.docNumber!==n); localStorage.setItem('serviceReports',JSON.stringify(docs)); showDocList(); showToast('ลบแล้ว','info'); }
-
         // ============ Toast ============
         function showToast(m,t){ const e=document.getElementById('toast'); e.textContent=m; e.className='toast toast-'+t+' show'; setTimeout(()=>e.classList.remove('show'),3000); }
-
         // ============ Modal backdrop ============
         document.getElementById('docListModal').addEventListener('click',function(e){if(e.target===this)closeDocList();});
         document.getElementById('pdfModal').addEventListener('click',function(e){if(e.target===this)closePdfModal();});
-
         // ============ Init ============
         window.addEventListener('load',function(){ const t=new Date().toISOString().split('T')[0]; document.getElementById('requestDate').value=t; document.getElementById('serviceDate').value=t; });
     </script>
-
 </body>
 </html>
